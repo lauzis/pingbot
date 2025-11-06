@@ -2,7 +2,28 @@
 
 A lightweight GNOME Shell extension that monitors the availability of your websites and services by periodically pinging URLs and displaying their status with visual indicators.
 
+**No external services required.** Unlike Uptime Kuma or cloud-based monitoring solutions, Ping Bot runs entirely on your local machine. No API keys, no accounts, no servers to maintain - just install and start monitoring.
+
 ![Ping Bot Screenshot](git-images/ping-bot.png)
+
+## Why Ping Bot?
+
+**Simple Local Monitoring** - Pings run directly from your machine, no external infrastructure needed:
+- No external services or API keys required
+- No account registration or authentication
+- No separate servers or Docker containers to run
+- No cloud services involved - your URLs stay private
+- Works for local network monitoring
+
+**Comparison to Other Solutions:**
+- **vs Uptime Kuma**: No need to self-host a server or run Docker
+- **vs Cloud Services**: No accounts, subscriptions, or data leaving your machine
+- **vs Kuma Shell Extension**: No external Uptime Kuma instance required
+
+**Perfect for:**
+- Developers monitoring local and production services
+- Sysadmins checking server availability at a glance
+- Anyone wanting simple monitoring
 
 ## Features
 
@@ -19,27 +40,32 @@ A lightweight GNOME Shell extension that monitors the availability of your websi
 
 ## Installation
 
-1. Copy the extension to your GNOME Shell extensions directory:
+### Quick Start (3 steps)
+
+1. **Install the extension:**
    ```bash
-   cp -r pingbot@gudlenieks.lv ~/.local/share/gnome-shell/extensions/
+   git clone https://github.com/lauzis/pingbot.git ~/.local/share/gnome-shell/extensions/pingbot@gudlenieks.lv
    ```
 
-2. Compile the GSettings schema:
+2. **Compile the settings schema:**
    ```bash
    cd ~/.local/share/gnome-shell/extensions/pingbot@gudlenieks.lv/schemas
    glib-compile-schemas .
    ```
-   
-   **Note**: The `gschemas.compiled` file is generated during installation and should not be committed to version control (it's in `.gitignore`).
 
-3. Restart GNOME Shell:
-   - **X11**: Press `Alt+F2`, type `r`, press `Enter`
-   - **Wayland**: Log out and log back in
+3. **Enable the extension:**
+   - Press `Alt+F2`, type `r`, press Enter (X11) OR log out and back in (Wayland)
+   - Enable: `gnome-extensions enable pingbot@gudlenieks.lv`
 
-4. Enable the extension:
-   ```bash
-   gnome-extensions enable pingbot@gudlenieks.lv
-   ```
+### Getting Started
+
+1. **Add URLs**: Click robot icon → Settings → Enter URLs to monitor
+2. **Configure**: Set ping interval (1-1440 minutes) and timeout (1-30 seconds)
+3. **Monitor**: Status updates automatically - click URLs in panel to open them
+
+That's it! No accounts, no API keys, no external services needed.
+
+**Note**: The `gschemas.compiled` file is generated during installation and should not be committed to version control (it's in `.gitignore`).
 
 ## Usage
 

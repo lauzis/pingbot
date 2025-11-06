@@ -1,6 +1,6 @@
 {
   "name": "Ping Bot",
-  "description": "Local uptime bot for GNOME Shell. Monitor website availability with periodic HTTP pings and visual status indicators.",
+  "description": "Monitor your important websites at a glance. Add URLs to your list, see status indicators in the panel - green when everything is up, red when something fails. No external services, API keys, or accounts needed. Runs locally on your machine.",
   "uuid": "pingbot@gudlenieks.lv",
   "shell-version": [ "45", "46" ],
   "settings-schema": "org.gnome.shell.extensions.pingbot",
