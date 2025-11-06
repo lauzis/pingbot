@@ -116,15 +116,14 @@ pingbot@gudlenieks.lv/
 ├── prefs.js              # Settings UI
 ├── metadata.json         # Extension metadata
 ├── stylesheet.css        # Custom styles for error states
-├── icons/                # Robot status icons (SVG)
-│   ├── robot-green.svg
-│   ├── robot-yellow.svg
-│   └── robot-red.svg
 ├── schemas/              # GSettings schema
 │   ├── org.gnome.shell.extensions.pingbot.gschema.xml
 │   └── gschemas.compiled (generated, not in git)
-├── AGENTS.md            # Project structure documentation
-└── README.md            # This file
+├── git-images/           # Screenshots for documentation
+│   └── ping-bot.png
+├── LICENSE               # MIT License
+├── AGENTS.md             # Project structure documentation
+└── README.md             # This file
 ```
 
 ### Settings Schema

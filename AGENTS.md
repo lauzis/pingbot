@@ -56,12 +56,6 @@ Ping Bot is a GNOME Shell extension that monitors website availability through p
 - Error state styling for invalid URL inputs
 - Red border and light red background for validation errors
 
-#### icons/
-- `robot-green.svg`: 32x32 robot icon for successful status
-- `robot-yellow.svg`: 32x32 robot icon for unknown status
-- `robot-red.svg`: 32x32 robot icon for failed status
-- Note: Panel uses emoji (🤖 + colored circles), settings list uses colored circle emojis
-
 ## Features Implementation
 
 ### Visual Indicators
