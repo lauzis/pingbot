@@ -2,6 +2,8 @@
 
 A lightweight GNOME Shell extension that monitors the availability of your websites and services by periodically pinging URLs and displaying their status with visual indicators.
 
+![Ping Bot Screenshot](git-images/ping-bot.png)
+
 ## Features
 
 - **Visual Status Indicators**: Color-coded emoji indicators (green/yellow/red) show the health of your monitored URLs

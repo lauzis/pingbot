@@ -1,7 +1,8 @@
 {
   "name": "Ping Bot",
-  "description": "A simple GNOME Shell extension.",
+  "description": "Local uptime bot for GNOME Shell. Monitor website availability with periodic HTTP pings and visual status indicators.",
   "uuid": "pingbot@gudlenieks.lv",
   "shell-version": [ "45", "46" ],
-  "settings-schema": "org.gnome.shell.extensions.pingbot"
+  "settings-schema": "org.gnome.shell.extensions.pingbot",
+  "url": "https://github.com/lauzis/pingbot"
 }

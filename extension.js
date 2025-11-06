@@ -115,7 +115,7 @@ export default class PingBotExtension extends Extension {
     
     _sendNotification(url) {
         const source = new MessageTray.Source({
-            title: 'Ping Bot',
+            title: '🤖 Ping Bot',
             iconName: 'dialog-warning-symbolic'
         });
         
@@ -123,7 +123,7 @@ export default class PingBotExtension extends Extension {
         
         const notification = new MessageTray.Notification({
             source: source,
-            title: 'URL Monitoring Alert',
+            title: '🤖 URL Monitoring Alert',
             body: `${url} is not accessible`,
             isTransient: false
         });
