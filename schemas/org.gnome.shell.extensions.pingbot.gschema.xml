@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+  <schema id="org.gnome.shell.extensions.pingbot" path="/org/gnome/shell/extensions/pingbot/">
+    <key name="ping-interval" type="i">
+      <default>60</default>
+      <summary>Ping interval in minutes</summary>
+      <description>Time interval between pings in minutes</description>
+      <range min="1" max="1440"/>
+    </key>
+    <key name="ping-urls" type="as">
+      <default>[]</default>
+      <summary>List of URLs to ping</summary>
+      <description>URLs that will be monitored by the ping bot</description>
+    </key>
+    <key name="url-statuses" type="s">
+      <default>'{}'</default>
+      <summary>URL status cache</summary>
+      <description>JSON object storing the last known status of each URL</description>
+    </key>
+    <key name="request-timeout" type="i">
+      <default>10</default>
+      <summary>HTTP request timeout in seconds</summary>
+      <description>Maximum time to wait for HTTP response before considering URL as failed</description>
+      <range min="1" max="30"/>
+    </key>
+  </schema>
+</schemalist>

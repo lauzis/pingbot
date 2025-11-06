@@ -1,0 +1,5 @@
+/* Error state for invalid URL input */
+entry.error {
+    border-color: #e74c3c;
+    background-color: rgba(231, 76, 60, 0.1);
+}

@@ -1,0 +1,7 @@
+{
+  "name": "Ping Bot",
+  "description": "A simple GNOME Shell extension.",
+  "uuid": "pingbot@gudlenieks.lv",
+  "shell-version": [ "45", "46" ],
+  "settings-schema": "org.gnome.shell.extensions.pingbot"
+}

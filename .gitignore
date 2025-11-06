@@ -1,0 +1,14 @@
+# Compiled GSettings schemas (generated file - should not be in git)
+schemas/gschemas.compiled
+
+# Backup files
+*~
+*.bak
+*.swp
+
+# macOS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
