@@ -7,22 +7,107 @@ Ping Bot is a GNOME Shell extension that monitors website availability through p
 
 ### Core Components
 
-#### PingBotExtension (`extension.js`)
-- **Type**: Main Extension Class
+The extension follows a modular architecture with separate files for different responsibilities:
+
+#### Main Extension (`extension.js`)
+- **Type**: Main Extension Coordinator (80 lines)
+- **Location**: Root directory
 - **Extends**: `Extension` from GNOME Shell
-- **Purpose**: Core extension lifecycle management and URL monitoring
+- **Purpose**: Extension lifecycle and module coordination
 - **Key Methods**:
-  - `enable()`: Activates the extension, loads cached statuses, starts pinging
+  - `enable()`: Activates the extension, initializes all modules with logger
   - `disable()`: Deactivates the extension, cleans up resources
-  - `_buildMenu()`: Constructs panel dropdown menu with URL list and settings button
-  - `_pingUrl(url)`: Performs HTTP GET request to check URL availability
-  - `_pingAllUrls()`: Pings all configured URLs at the set interval
-  - `_checkNetworkConnection()`: Validates internet connectivity before pinging
-  - `_updateMainStatus()`: Updates panel icon based on worst-case URL status
-  - `_sendNotification(url)`: Sends GNOME notification for failed URLs (throttled to once per hour)
+  - `_connectSignals()`: Wires up GSettings change handlers
+  - `_updateMainStatus()`: Updates panel icon based on overall status
+- **Imports**: All modules from `./lib/` directory
+- **Size**: 76% smaller than original monolithic design
+
+#### Logger (`lib/logger.js`)
+- **Type**: Logging Utility (37 lines)
+- **Location**: `lib/` directory
+- **Exports**: `Logger`
+- **Purpose**: Centralized logging with debug mode support
+- **Key Methods**:
+  - `debug(message, context)`: Debug-level logging (only when G_MESSAGES_DEBUG=pingbot)
+  - `info(message)`: Info-level logging (always shown)
+  - `error(message, error)`: Error logging (always shown)
+  - `warn(message)`: Warning logging (always shown)
+- **Features**:
+  - Auto-detects G_MESSAGES_DEBUG environment variable
+  - Silent in production, verbose when debugging
+  - Uses GNOME's native log() and logError() functions
+  - Structured logging with context objects
+
+#### StatusManager (`lib/statusManager.js`)
+- **Type**: Status Persistence Module (67 lines)
+- **Location**: `lib/` directory
+- **Exports**: `PingStatus`, `StatusManager`
+- **Purpose**: Manages URL status storage and retrieval
+- **Key Methods**:
+  - `getStatus(url)`: Returns current status for a URL
+  - `setStatus(url, status)`: Updates status and saves to GSettings
+  - `getOverallStatus(urls)`: Calculates overall status (red if any red, yellow if any yellow, else green)
+  - `setAllYellow(urls)`: Batch operation when network is unavailable
+
+#### UrlPinger (`lib/urlPinger.js`)
+- **Type**: HTTP Request Module (73 lines)
+- **Location**: `lib/` directory
+- **Exports**: `UrlPinger`
+- **Purpose**: Handles all HTTP pinging and network connectivity
+- **Key Methods**:
+  - `pingUrl(url, callback)`: Sends HTTP GET request with timeout
+  - `pingAll(urls, callback)`: Checks network, then pings all URLs
+  - `destroy()`: Aborts all active sessions (prevents memory leaks)
+- **Features**:
+  - Uses `Gio.NetworkMonitor` for network connectivity check (no external services)
+  - Tracks active sessions in Map for proper cleanup
+  - Calls `session.abort()` on disable
+  - Debug logging for ping operations
+
+#### PingScheduler (`lib/pingScheduler.js`)
+- **Type**: Scheduling Module (47 lines)
+- **Location**: `lib/` directory
+- **Exports**: `PingScheduler`
+- **Purpose**: Manages periodic URL pinging
+- **Key Methods**:
+  - `start()`: Begins periodic pinging based on configured interval
+  - `stop()`: Stops pinging and cleans up timeout
+  - `_pingAllUrls()`: Triggers URL pings and handles callbacks
+- **Features**:
+  - GLib timeout management with proper cleanup
+  - Coordinates UrlPinger and NotificationManager
+  - Triggers notifications on URL failures
+
+#### PanelIndicator (`lib/panelIndicator.js`)
+- **Type**: UI Module (85 lines)
+- **Location**: `lib/` directory
+- **Exports**: `PanelIndicator`
+- **Purpose**: Manages panel button and dropdown menu
+- **Key Methods**:
+  - `updateStatus(status)`: Updates panel icon emoji
+  - `buildMenu()`: Rebuilds dropdown menu with URL list
+  - `destroy()`: Cleans up UI elements
+- **Features**:
+  - Robot emoji with colored status indicator
+  - Click URLs to open in default browser
+  - Settings menu item
+  - Error logging for failures
+
+#### NotificationManager (`lib/notificationManager.js`)
+- **Type**: Notification Module (38 lines)
+- **Location**: `lib/` directory
+- **Exports**: `NotificationManager`
+- **Purpose**: Handles GNOME desktop notifications
+- **Key Methods**:
+  - `notifyFailure(url)`: Sends notification when URL fails
+- **Features**:
+  - Throttles notifications to once per hour
+  - Uses MessageTray API
+  - Debug logging for notification events
 
 #### PingBotPreferences (`prefs.js`)
-- **Type**: Preferences UI Class
+- **Type**: Preferences UI Class (245 lines)
+- **Location**: Root directory
 - **Extends**: `ExtensionPreferences`
 - **Purpose**: Manages extension settings and preferences UI
 - **UI Framework**: Uses GTK4 (Adw/Gtk)
@@ -71,9 +156,10 @@ Ping Bot is a GNOME Shell extension that monitors website availability through p
 
 ### Monitoring System
 - Periodic pinging based on configurable interval
-- Network connectivity pre-check using Firefox detection portal
+- Network connectivity pre-check using GNOME's native `Gio.NetworkMonitor` API (no external services)
 - Async HTTP requests using libsoup
 - Status persistence across sessions using GSettings
+- Proper session cleanup with `session.abort()` on disable
 
 ### Notifications
 - GNOME notification sent when URL transitions from working to failed
@@ -95,10 +181,21 @@ Ping Bot is a GNOME Shell extension that monitors website availability through p
 - Notification system for failures
 
 ### Code Organization
-- Clean separation between extension logic and preferences UI
+- Modular architecture with separate files for each responsibility
+- Standard `lib/` directory structure for helper modules
+- `extension.js` (80 lines) - main coordinator (root) ⭐ 76% smaller than original
+- `prefs.js` (245 lines) - preferences UI (root)
+- `lib/logger.js` (37 lines) - centralized logging with debug mode
+- `lib/statusManager.js` (67 lines) - status persistence
+- `lib/urlPinger.js` (73 lines) - HTTP requests and network checks
+- `lib/pingScheduler.js` (47 lines) - periodic ping scheduling
+- `lib/panelIndicator.js` (85 lines) - panel UI and menu
+- `lib/notificationManager.js` (38 lines) - notifications
+- ES6 module imports/exports for clean dependencies
 - Emoji-based visual indicators (no SVG loading in runtime)
-- Proper resource cleanup in disable()
+- Proper resource cleanup in disable() with session.abort()
 - Event-driven menu updates via GSettings signals
+- Professional logging: silent in production, verbose in debug mode
 
 ## Dependencies
 - GNOME Shell 45/46

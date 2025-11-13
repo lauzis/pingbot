@@ -1,6 +1,7 @@
 # Ping Bot - GNOME Shell Extension
 
 A lightweight GNOME Shell extension that monitors the availability of your websites and services by periodically pinging URLs and displaying their status with visual indicators.
+Mainly this is made for personal needs, but thought this could be useful for others as well.
 
 **No external services required.** Unlike Uptime Kuma or cloud-based monitoring solutions, Ping Bot runs entirely on your local machine. No API keys, no accounts, no servers to maintain - just install and start monitoring.
 
@@ -20,27 +21,23 @@ A lightweight GNOME Shell extension that monitors the availability of your websi
 - **vs Cloud Services**: No accounts, subscriptions, or data leaving your machine
 - **vs Kuma Shell Extension**: No external Uptime Kuma instance required
 
-**Perfect for:**
-- Developers monitoring local and production services
-- Sysadmins checking server availability at a glance
-- Anyone wanting simple monitoring
-
 ## Features
 
 - **Visual Status Indicators**: Color-coded emoji indicators (green/yellow/red) show the health of your monitored URLs
 - **Panel Menu**: Click the panel icon to see all monitored URLs with their current status
-- **Automatic Monitoring**: Configurable ping intervals from 1 to 1440 minutes
+- **Automatic Monitoring**: Configurable ping intervals
 - **Network Awareness**: Automatically detects network connectivity before attempting to ping URLs
 - **Per-URL Status**: Each URL displays its own status icon in the settings panel and dropdown menu
-- **Persistent State**: Status information is saved and persists across sessions
 - **Real-time Updates**: Status icons update live in the preferences window and panel menu
 - **Failure Notifications**: Receive GNOME notifications when URLs fail (maximum once per hour)
-- **URL Validation**: Only valid HTTP/HTTPS URLs can be added to the monitoring list
 - **Click to Open**: Click URLs in the panel dropdown to open them in your default browser
 
 ## Installation
 
-### Quick Start (3 steps)
+### Enable it trough GNOME Extensions website
+or
+
+### Manual/local install - Quick Start (3 steps)
 
 1. **Install the extension:**
    ```bash
@@ -60,12 +57,10 @@ A lightweight GNOME Shell extension that monitors the availability of your websi
 ### Getting Started
 
 1. **Add URLs**: Click robot icon → Settings → Enter URLs to monitor
-2. **Configure**: Set ping interval (1-1440 minutes) and timeout (1-30 seconds)
+2. **Configure**: Set ping interval
 3. **Monitor**: Status updates automatically - click URLs in panel to open them
 
 That's it! No accounts, no API keys, no external services needed.
-
-**Note**: The `gschemas.compiled` file is generated during installation and should not be committed to version control (it's in `.gitignore`).
 
 ## Usage
 
@@ -77,8 +72,6 @@ That's it! No accounts, no API keys, no external services needed.
    - Enter a URL (e.g., `https://example.com`)
    - Click Add URL or press Enter
 4. The URL will appear in the list with a status icon
-
-Note: Only valid HTTP/HTTPS URLs are accepted. Invalid URLs will show a red border on the input field.
 
 ### Status Indicators
 
@@ -128,30 +121,14 @@ Click the trash icon next to any URL in the settings list to remove it from moni
 
 - **Extension Type**: GNOME Shell Panel Extension
 - **Language**: JavaScript (GJS)
+- **Code Organization**: Modular architecture with `lib/` directory (7 focused modules)
 - **Dependencies**: 
   - GNOME Shell 45/46
   - GTK4 (Adwaita)
   - libsoup (for HTTP requests)
   - GSettings (for configuration storage)
-
-### File Structure
-
-```
-pingbot@gudlenieks.lv/
-├── extension.js          # Main extension logic
-├── prefs.js              # Settings UI
-├── metadata.json         # Extension metadata
-├── stylesheet.css        # Custom styles for error states
-├── schemas/              # GSettings schema
-│   ├── org.gnome.shell.extensions.pingbot.gschema.xml
-│   └── gschemas.compiled (generated, not in git)
-├── git-images/           # Screenshots for documentation
-│   └── ping-bot.png
-├── LICENSE               # MIT License
-├── AGENTS.md             # Project structure documentation
-└── README.md             # This file
-```
-
+  - Gio.NetworkMonitor (for network connectivity checks)
+  - 
 ### Settings Schema
 
 The extension uses GSettings to store:
@@ -172,8 +149,15 @@ MUTTER_DEBUG_DUMMY_MODE_SPECS=1920x1080 dbus-run-session -- gnome-shell --nested
 
 ### Viewing Logs
 
+Production logs:
 ```bash
-journalctl -f -o cat /usr/bin/gnome-shell | grep "Ping Bot"
+journalctl -f -o cat /usr/bin/gnome-shell | grep "\[pingbot\]"
+```
+
+Debug mode (verbose):
+```bash
+G_MESSAGES_DEBUG=pingbot gnome-shell --replace
+journalctl -f -o cat /usr/bin/gnome-shell | grep "\[pingbot\]"
 ```
 
 ### Debugging
@@ -184,34 +168,47 @@ Enable the extension and check for errors:
 gnome-extensions info pingbot@gudlenieks.lv
 ```
 
-## Troubleshooting
-
-### Extension not showing in panel
-
-1. Check if extension is enabled: `gnome-extensions list --enabled`
-2. Check for errors: `journalctl -b -o cat | grep -i pingbot`
-3. Restart GNOME Shell (Alt+F2 → r)
-
-### Icons not updating
-
-- Ensure network connectivity is available
-- Check the ping interval setting (may need to wait for next cycle)
-- Verify URLs are valid and accessible
-
-### Settings window not opening
-
-- Check GSettings schema is compiled: `ls schemas/gschemas.compiled`
-- If missing, run: `glib-compile-schemas schemas/`
-
 ## Known Limitations
 
 - URLs must be accessible via HTTP/HTTPS GET requests
 - Only HTTP and HTTPS protocols are supported (FTP, file://, etc. are rejected)
 - Minimum ping interval is 1 minute (to avoid excessive network traffic)
-- Network check uses Firefox's detection portal (requires internet access)
+- Network check uses GNOME's native NetworkMonitor API
 - Notifications are throttled to once per hour to avoid spam
 
 ## Changelog
+
+### Version 1.0.1 (November 13, 2025)
+
+**Improvements:**
+- Replaced Mozilla portal network check with native GNOME `Gio.NetworkMonitor` API
+  - More reliable network connectivity detection
+  - No external HTTP requests for connectivity checks
+  - Uses GNOME's built-in network monitoring system
+- Added extension icon (128x128 PNG) generated from favicon
+- Added `release.sh` script for automated release packaging
+  - Excludes development files (.git, .idea, git-images, etc.)
+  - Creates clean zip ready for distribution
+- Refactored code into modular architecture
+  - Created `lib/` directory for helper modules
+  - Split extension.js into 6 focused modules:
+    - `logger.js` - Centralized logging with debug mode
+    - `statusManager.js` - Status persistence
+    - `urlPinger.js` - HTTP requests
+    - `pingScheduler.js` - Periodic scheduling
+    - `panelIndicator.js` - Panel UI & menu
+    - `notificationManager.js` - Notifications
+  - Main class reduced by 76% (317 to 80 lines)
+  - Better code organization and maintainability
+- Improved resource management
+  - Proper timeout cleanup before creating new ones
+  - Session tracking with `session.abort()` on disable
+  - Prevents memory leaks from pending HTTP requests
+- Professional logging system
+  - Silent in production (only lifecycle + errors)
+  - Verbose debug mode: `G_MESSAGES_DEBUG=pingbot`
+  - Uses GNOME's native logging functions
+  - Respects privacy (no URL logging by default)
 
 ### Version 1.0 (November 2025)
 
@@ -251,5 +248,5 @@ Code mostly generated by GitHub Copilot CLI.
 
 ---
 
-**Version**: 1.0  
-**Last Updated**: November 2025
+**Version**: 1.0.1  
+**Last Updated**: November 13, 2025
