@@ -1,9 +1,9 @@
 {
   "name": "Ping Bot",
-  "description": "Monitor your important websites at a glance. Add URLs to your list, see status indicators in the panel - green when everything is up, red when something fails. No external services, API keys, or accounts needed. Runs locally on your machine.",
+  "description": "Monitor your important websites at a glance. Add URLs to your list, see status indicators in the panel:\n🟢 - Everything is ok, all sites reachable.\n🟡 - Unknown or no network.\n🔴 - Some site is not reachable.\n\n No external services, no API keys, or accounts needed.\nSimilar to uptime robot services, but from your local machine.",
   "uuid": "pingbot@gudlenieks.lv",
-  "version": 2,
-  "shell-version": [ "45", "46" ],
+  "version": 3,
+  "shell-version": [ "45", "46", "47", "48", "49" ],
   "settings-schema": "org.gnome.shell.extensions.pingbot",
   "url": "https://github.com/lauzis/pingbot",
   "icon": "icon.png"

@@ -40,7 +40,8 @@ export default class PingBotExtension extends Extension {
             this._statusManager,
             this._urlPinger,
             this._notificationManager,
-            () => this._updateMainStatus()
+            () => this._updateMainStatus(),
+            this._logger
         );
 
         // initial setupp, status update and start pinging urls
@@ -79,11 +80,21 @@ export default class PingBotExtension extends Extension {
 
     _connectSignals() {
         this._settings.connect('changed::ping-urls', () => {
+            const urls = this._settings.get_strv('ping-urls');
+            this._logger.debug('Settings changed: ping-urls updated', { urls });
             this._panelIndicator.buildMenu();
+            // Restart scheduler to ping new URLs immediately
+            this._pingScheduler.start();
         });
         this._settings.connect('changed::url-statuses', () => {
             this._updateMainStatus();
             this._panelIndicator.buildMenu();
+        });
+        this._settings.connect('changed::ping-interval', () => {
+            const interval = this._settings.get_int('ping-interval');
+            this._logger.debug(`Settings changed: ping-interval updated to ${interval} minutes`);
+            // Restart scheduler to apply new interval
+            this._pingScheduler.start();
         });
     }
 
