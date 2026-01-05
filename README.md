@@ -138,14 +138,6 @@ The extension uses GSettings to store:
 
 ## Development
 
-### Testing in Nested Shell
-
-For development and testing without affecting your main session:
-
-```bash
-MUTTER_DEBUG_DUMMY_MODE_SPECS=1920x1080 dbus-run-session -- gnome-shell --nested --wayland
-```
-
 ### Viewing Logs
 
 Production logs:
