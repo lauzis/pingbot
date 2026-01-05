@@ -31,6 +31,7 @@ export default class PingBotExtension extends Extension {
             this._settings,
             this._statusManager,
             () => this.openPreferences(),
+            () => this._pingScheduler.forceRecheck(),
             this._logger
         );
 
