@@ -52,6 +52,52 @@ export default class PingBotPreferences extends ExtensionPreferences {
         
         group.add(timeoutRow);
         page.add(group);
+
+        // Appearance group
+        const appearanceGroup = new Adw.PreferencesGroup({
+            title: 'Appearance',
+        });
+
+        // Icon Style
+        const styleRow = new Adw.ComboRow({
+            title: 'Icon Style',
+            subtitle: 'Choose between Material icons or Emoji',
+            model: new Gtk.StringList({
+                strings: ['Material Icons', 'Emoji']
+            }),
+        });
+
+        const styles = ['material', 'emoji'];
+        const currentStyle = settings.get_string('icon-style');
+        styleRow.selected = Math.max(0, styles.indexOf(currentStyle));
+
+        styleRow.connect('notify::selected', () => {
+            settings.set_string('icon-style', styles[styleRow.selected]);
+        });
+
+        appearanceGroup.add(styleRow);
+
+        // Icon Size
+        const sizeRow = new Adw.SpinRow({
+            title: 'Icon Size',
+            subtitle: 'Size in pixels (default: 16)',
+            adjustment: new Gtk.Adjustment({
+                lower: 10,
+                upper: 64,
+                step_increment: 2,
+                page_increment: 4,
+            }),
+        });
+
+        settings.bind(
+            'icon-size',
+            sizeRow,
+            'value',
+            0
+        );
+
+        appearanceGroup.add(sizeRow);
+        page.add(appearanceGroup);
         
         // URLs group
         const urlsGroup = new Adw.PreferencesGroup({

@@ -32,7 +32,8 @@ export default class PingBotExtension extends Extension {
             this._statusManager,
             () => this.openPreferences(),
             () => this._pingScheduler.forceRecheck(),
-            this._logger
+            this._logger,
+            this.dir
         );
 
         // scheduler that periodically pings the URLs and status updates

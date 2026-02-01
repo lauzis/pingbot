@@ -134,6 +134,8 @@ The extension follows a modular architecture with separate files for different r
 - **ping-interval** (int): Time between pings in minutes (1-1440)
 - **ping-urls** (array of strings): List of URLs to monitor
 - **url-statuses** (JSON string): Cached status for each URL (green/yellow/red)
+- **icon-style** (string): Panel icon style ('material' or 'emoji')
+- **icon-size** (int): Panel icon size in pixels
 
 ### Resources
 
@@ -144,7 +146,9 @@ The extension follows a modular architecture with separate files for different r
 ## Features Implementation
 
 ### Visual Indicators
-- **Panel Icon**: Robot emoji (🤖) + colored circle emoji (🟢/🟡/🔴)
+- **Panel Icon**: 
+  - **Material Style**: Custom SVG icons (`check_circle`, `help`, `error`) from `icons/` folder
+  - **Emoji Style**: Robot emoji (🤖) + colored circle emoji (🟢/🟡/🔴)
 - **Panel Dropdown**: List of URLs with status emojis, click to open in browser
 - **Settings List**: URLs with colored circle emojis, live updates
 
