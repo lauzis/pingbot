@@ -24,9 +24,9 @@
       <range min="1" max="30"/>
     </key>
     <key name="icon-style" type="s">
-      <default>'material'</default>
+      <default>'symbolic'</default>
       <summary>Panel icon style</summary>
-      <description>Style of the panel icon (material or emoji)</description>
+      <description>Style of the panel icon (symbolic, material, or emoji)</description>
     </key>
     <key name="icon-size" type="i">
       <default>16</default>

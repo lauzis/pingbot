@@ -3,3 +3,16 @@ entry.error {
     border-color: #e74c3c;
     background-color: rgba(231, 76, 60, 0.1);
 }
+
+/* Status icon colors for Material mode */
+.pingbot-status-green {
+    color: #2ecc71;
+}
+
+.pingbot-status-yellow {
+    color: #f1c40f;
+}
+
+.pingbot-status-red {
+    color: #e74c3c;
+}

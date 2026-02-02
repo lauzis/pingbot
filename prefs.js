@@ -2,10 +2,12 @@ import Adw from 'gi://Adw';
 import Gtk from 'gi://Gtk';
 import GLib from 'gi://GLib';
 import {ExtensionPreferences} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
+import {IconHelper, IconType} from './lib/iconHelper.js';
 
 export default class PingBotPreferences extends ExtensionPreferences {
     fillPreferencesWindow(window) {
         const settings = this.getSettings();
+        const iconHelper = new IconHelper(settings);
         
         const page = new Adw.PreferencesPage();
         const group = new Adw.PreferencesGroup({
@@ -61,13 +63,13 @@ export default class PingBotPreferences extends ExtensionPreferences {
         // Icon Style
         const styleRow = new Adw.ComboRow({
             title: 'Icon Style',
-            subtitle: 'Choose between Material icons or Emoji',
+            subtitle: 'Choose icon appearance for panel',
             model: new Gtk.StringList({
-                strings: ['Material Icons', 'Emoji']
+                strings: ['Symbolic (Native GNOME)', 'Material Icons', 'Emoji']
             }),
         });
 
-        const styles = ['material', 'emoji'];
+        const styles = ['symbolic', 'material', 'emoji'];
         const currentStyle = settings.get_string('icon-style');
         styleRow.selected = Math.max(0, styles.indexOf(currentStyle));
 
@@ -97,6 +99,79 @@ export default class PingBotPreferences extends ExtensionPreferences {
         );
 
         appearanceGroup.add(sizeRow);
+        
+        // Icon Preview Table
+        const previewBox = new Gtk.Box({
+            orientation: Gtk.Orientation.VERTICAL,
+            spacing: 8,
+            margin_top: 12,
+            margin_bottom: 12,
+            margin_start: 12,
+            margin_end: 12,
+        });
+        
+        const previewLabel = new Gtk.Label({
+            label: 'Icon Preview',
+            xalign: 0,
+            margin_bottom: 6,
+        });
+        previewLabel.add_css_class('heading');
+        previewBox.append(previewLabel);
+        
+        const createPreviewRow = (label, iconType) => {
+            const row = new Gtk.Box({
+                orientation: Gtk.Orientation.HORIZONTAL,
+                spacing: 12,
+                margin_start: 12,
+            });
+            
+            const iconWidget = iconHelper.createPrefsIcon(iconType, Gtk);
+            row._iconWidget = iconWidget;
+            row._iconType = iconType;
+            
+            const labelWidget = new Gtk.Label({
+                label: label,
+                xalign: 0,
+                hexpand: true,
+            });
+            
+            row.append(iconWidget);
+            row.append(labelWidget);
+            
+            return row;
+        };
+        
+        const statusGreenRow = createPreviewRow('Status: Online', IconType.STATUS_GREEN);
+        const statusYellowRow = createPreviewRow('Status: Unknown', IconType.STATUS_YELLOW);
+        const statusRedRow = createPreviewRow('Status: Offline', IconType.STATUS_RED);
+        const robotRow = createPreviewRow('Robot/Server Icon', IconType.ROBOT);
+        const refreshRow = createPreviewRow('Refresh Icon', IconType.REFRESH);
+        const settingsRow = createPreviewRow('Settings Icon', IconType.SETTINGS);
+        
+        previewBox.append(statusGreenRow);
+        previewBox.append(statusYellowRow);
+        previewBox.append(statusRedRow);
+        previewBox.append(robotRow);
+        previewBox.append(refreshRow);
+        previewBox.append(settingsRow);
+        
+        const previewRows = [statusGreenRow, statusYellowRow, statusRedRow, robotRow, refreshRow, settingsRow];
+        
+        // Update preview icons when style changes
+        const updatePreviewIcons = () => {
+            previewRows.forEach(row => {
+                if (row._iconWidget && row._iconType) {
+                    iconHelper.updatePrefsIcon(row._iconWidget, row._iconType);
+                }
+            });
+        };
+        
+        settings.connect('changed::icon-style', updatePreviewIcons);
+        
+        const previewRow = new Adw.ActionRow();
+        previewRow.set_child(previewBox);
+        appearanceGroup.add(previewRow);
+        
         page.add(appearanceGroup);
         
         // URLs group
@@ -135,21 +210,17 @@ export default class PingBotPreferences extends ExtensionPreferences {
             const statuses = getUrlStatuses();
             const status = statuses[url] || 'yellow';
             
-            // Use emoji instead of SVG
-            let emoji = '🟡'; // yellow
+            let iconType;
             if (status === 'green') {
-                emoji = '🟢';
+                iconType = IconType.STATUS_GREEN;
             } else if (status === 'red') {
-                emoji = '🔴';
+                iconType = IconType.STATUS_RED;
+            } else {
+                iconType = IconType.STATUS_YELLOW;
             }
             
-            const statusLabel = new Gtk.Label({
-                label: emoji,
-                xalign: 0,
-            });
-            
-            // Store status label reference for updates
-            row._statusLabel = statusLabel;
+            const statusWidget = iconHelper.createPrefsIcon(iconType, Gtk);
+            row._statusWidget = statusWidget;
             row._url = url;
             
             const label = new Gtk.Label({
@@ -172,27 +243,30 @@ export default class PingBotPreferences extends ExtensionPreferences {
                 }
             });
             
-            row.append(statusLabel);
+            row.append(statusWidget);
             row.append(label);
             row.append(deleteButton);
             
             return row;
         };
         
-        // Function to update icon status for all rows
         const updateAllIcons = () => {
             const statuses = getUrlStatuses();
             let child = urlsBox.get_first_child();
             while (child) {
-                if (child._statusLabel && child._url) {
+                if (child._statusWidget && child._url) {
                     const status = statuses[child._url] || 'yellow';
-                    let emoji = '🟡';
+                    
+                    let iconType;
                     if (status === 'green') {
-                        emoji = '🟢';
+                        iconType = IconType.STATUS_GREEN;
                     } else if (status === 'red') {
-                        emoji = '🔴';
+                        iconType = IconType.STATUS_RED;
+                    } else {
+                        iconType = IconType.STATUS_YELLOW;
                     }
-                    child._statusLabel.set_label(emoji);
+                    
+                    iconHelper.updatePrefsIcon(child._statusWidget, iconType);
                 }
                 child = child.get_next_sibling();
             }
@@ -291,6 +365,11 @@ export default class PingBotPreferences extends ExtensionPreferences {
         // Watch for status changes and update icons
         settings.connect('changed::url-statuses', () => {
             updateAllIcons();
+        });
+        
+        // Watch for icon style changes and rebuild list
+        settings.connect('changed::icon-style', () => {
+            refreshUrlList();
         });
         
         refreshUrlList();
