@@ -6,5 +6,8 @@
   "shell-version": [ "45", "46", "47", "48", "49" ],
   "settings-schema": "org.gnome.shell.extensions.pingbot",
   "url": "https://github.com/lauzis/pingbot",
-  "icon": "icon.png"
+  "icon": "icon.png",
+  "donations": {
+    "paypal": "https://www.paypal.com/donate?token=mBDA_icmxwBEaawsjEBTbO0DqE74jH7k_ZX4_Bgtju4TKj35HO_aqQ0tFD8Wyh-TZ-xGHEk8dBrRAuJ7"
+  }
 }

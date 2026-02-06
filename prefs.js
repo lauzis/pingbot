@@ -141,32 +141,37 @@ export default class PingBotPreferences extends ExtensionPreferences {
             return row;
         };
         
-        const statusGreenRow = createPreviewRow('Status: Online', IconType.STATUS_GREEN);
-        const statusYellowRow = createPreviewRow('Status: Unknown', IconType.STATUS_YELLOW);
-        const statusRedRow = createPreviewRow('Status: Offline', IconType.STATUS_RED);
-        const robotRow = createPreviewRow('Robot/Server Icon', IconType.ROBOT);
-        const refreshRow = createPreviewRow('Refresh Icon', IconType.REFRESH);
-        const settingsRow = createPreviewRow('Settings Icon', IconType.SETTINGS);
+        const previewData = [
+            { label: 'Status: Online', type: IconType.STATUS_GREEN },
+            { label: 'Status: Unknown', type: IconType.STATUS_YELLOW },
+            { label: 'Status: Offline', type: IconType.STATUS_RED },
+            { label: 'Robot/Server Icon', type: IconType.ROBOT },
+            { label: 'Refresh Icon', type: IconType.REFRESH },
+            { label: 'Settings Icon', type: IconType.SETTINGS },
+        ];
         
-        previewBox.append(statusGreenRow);
-        previewBox.append(statusYellowRow);
-        previewBox.append(statusRedRow);
-        previewBox.append(robotRow);
-        previewBox.append(refreshRow);
-        previewBox.append(settingsRow);
-        
-        const previewRows = [statusGreenRow, statusYellowRow, statusRedRow, robotRow, refreshRow, settingsRow];
-        
-        // Update preview icons when style changes
-        const updatePreviewIcons = () => {
-            previewRows.forEach(row => {
-                if (row._iconWidget && row._iconType) {
-                    iconHelper.updatePrefsIcon(row._iconWidget, row._iconType);
+        const rebuildPreviewRows = () => {
+            // Remove all existing rows
+            let child = previewBox.get_first_child();
+            while (child) {
+                if (child !== previewLabel) {
+                    const next = child.get_next_sibling();
+                    previewBox.remove(child);
+                    child = next;
+                } else {
+                    child = child.get_next_sibling();
                 }
+            }
+            
+            // Add new rows with current style
+            previewData.forEach(({ label, type }) => {
+                previewBox.append(createPreviewRow(label, type));
             });
         };
         
-        settings.connect('changed::icon-style', updatePreviewIcons);
+        rebuildPreviewRows();
+        
+        settings.connect('changed::icon-style', rebuildPreviewRows);
         
         const previewRow = new Adw.ActionRow();
         previewRow.set_child(previewBox);
