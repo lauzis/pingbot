@@ -64,7 +64,7 @@ The extension follows a modular architecture with separate files for different r
   - Structured logging with context objects
 
 #### IconHelper (`lib/iconHelper.js`)
-- **Type**: Icon Management Utility (120 lines)
+- **Type**: Icon Management Utility (222 lines)
 - **Location**: `lib/` directory
 - **Exports**: `IconHelper` (class), `IconType` (constants)
 - **Purpose**: Settings-aware centralized icon rendering for panel and preferences
@@ -80,10 +80,10 @@ The extension follows a modular architecture with separate files for different r
   - **Settings-aware**: Checks icon-style internally, no caller conditionals needed
   - **Single source of truth**: All icon logic in one place
   - **File-based icons**: Loads SVG files from `icons/symbolic/` and `icons/material/` subdirectories
-  - **Theme-aware coloring**: Dynamically replaces hardcoded colors with `currentColor` to inherit theme colors
+  - **Theme-integrated**: All SVG icons use `fill="currentColor"` to inherit panel text color
   - **Extensible**: New icon styles added in one method only
   - **Context-adaptive**: Works for both Shell (St) and GTK4 contexts
-  - No inline SVG templates - all assets loaded from icon files
+  - All icon files properly configured with currentColor for automatic theme adaptation
 
 #### StatusManager (`lib/statusManager.js`)
 - **Type**: Status Persistence Module (67 lines)
@@ -245,7 +245,7 @@ The extension follows a modular architecture with separate files for different r
 - `extension.js` (80 lines) - main coordinator (root) ⭐ 76% smaller than original
 - `prefs.js` (210 lines) - preferences UI (root) ⭐ REDUCED
 - `lib/logger.js` (37 lines) - centralized logging with debug mode
-- `lib/iconHelper.js` (120 lines) - **file-based icon management with theme coloring** ⭐ IMPROVED
+- `lib/iconHelper.js` (222 lines) - **file-based icon management with theme integration** ⭐ IMPROVED
 - `lib/statusManager.js` (67 lines) - status persistence
 - `lib/urlPinger.js` (73 lines) - HTTP requests and network checks
 - `lib/pingScheduler.js` (47 lines) - periodic ping scheduling
@@ -315,12 +315,12 @@ The extension follows a modular architecture with separate files for different r
 
 - **File-based Architecture**: Both symbolic and material styles load SVG files from organized subdirectories
 - **Single Source of Truth**: `ICON_FILENAMES` map in IconHelper defines which file to use for each icon type
-- **Technology**: `Gio.BytesIcon` with dynamically modified SVG content
-- **Theme-aware Coloring**: 
-  - Loads SVG files and replaces hardcoded `fill="#hexcolor"` with `fill="currentColor"`
+- **Technology**: `Gio.BytesIcon` for loading SVG content
+- **Theme-integrated Coloring**: 
+  - All SVG icon files use `fill="currentColor"` attribute
   - Icons automatically inherit the panel text color from the active GNOME Shell theme
   - Works seamlessly with light, dark, and custom themes
-  - No manual color configuration needed
+  - No runtime color manipulation needed - handled by the theme engine
 - **Why File-based**:
   - Easy to update icons without code changes
   - Designers can work directly with SVG files
@@ -330,8 +330,9 @@ The extension follows a modular architecture with separate files for different r
   - ✅ Maintainable: Update icons by replacing SVG files
   - ✅ Flexible: Add new icon styles by creating new subdirectories
   - ✅ Clean: No inline SVG code cluttering the codebase
-  - ✅ Designer-friendly: Standard SVG workflow
+  - ✅ Designer-friendly: Standard SVG workflow with currentColor
   - ✅ Theme-integrated: Icons match system appearance automatically
+  - ✅ Performance: No runtime string manipulation or color replacement
 
 **Emoji Style**:
 - **Technology**: Unicode text via `St.Label` or `Gtk.Label`
