@@ -64,25 +64,26 @@ The extension follows a modular architecture with separate files for different r
   - Structured logging with context objects
 
 #### IconHelper (`lib/iconHelper.js`)
-- **Type**: Icon Management Utility (163 lines)
+- **Type**: Icon Management Utility (120 lines)
 - **Location**: `lib/` directory
 - **Exports**: `IconHelper` (class), `IconType` (constants)
 - **Purpose**: Settings-aware centralized icon rendering for panel and preferences
-- **Constructor**: `new IconHelper(settings)` - requires GSettings instance
+- **Constructor**: `new IconHelper(settings, extensionDir, logger)` - requires GSettings, extension directory, and optional logger
 - **Key Methods**:
   - `createPanelIcon(iconType)`: Returns icon for panel/menu (BytesIcon or emoji string)
   - `createPrefsIcon(iconType, Gtk)`: Returns widget for preferences (Gtk.Image or Gtk.Label)
   - `updatePrefsIcon(widget, iconType)`: Updates existing preferences widget
-  - `getIconStyle()`: Returns current icon style ('material' or 'emoji')
+  - `getIconStyle()`: Returns current icon style ('symbolic', 'material', or 'emoji')
   - `getIconSize()`: Returns configured icon size
 - **Icon Types**: STATUS_GREEN, STATUS_YELLOW, STATUS_RED, ROBOT, REFRESH, SETTINGS
 - **Features**:
   - **Settings-aware**: Checks icon-style internally, no caller conditionals needed
   - **Single source of truth**: All icon logic in one place
+  - **File-based icons**: Loads SVG files from `icons/symbolic/` and `icons/material/` subdirectories
+  - **Theme-aware coloring**: Dynamically replaces hardcoded colors with `currentColor` to inherit theme colors
   - **Extensible**: New icon styles added in one method only
   - **Context-adaptive**: Works for both Shell (St) and GTK4 contexts
-  - Inline SVG templates with dynamic color injection
-  - No file dependencies - all assets embedded in code
+  - No inline SVG templates - all assets loaded from icon files
 
 #### StatusManager (`lib/statusManager.js`)
 - **Type**: Status Persistence Module (67 lines)
@@ -196,13 +197,15 @@ The extension follows a modular architecture with separate files for different r
 ## Features Implementation
 
 ### Visual Indicators
-- **Panel Icon**: Dual-mode support:
-  - **Emoji mode** (default): Robot emoji (🤖) + colored circle emoji (🟢/🟡/🔴)
-  - **Material mode**: SVG icons that inherit theme colors for better integration
-- **Panel Dropdown**: List of URLs with status emojis, click to open in browser
-- **Settings List**: URLs with colored circle emojis, live updates
-- **Icon Style**: User-configurable choice between Material SVG icons or emoji indicators
+- **Panel Icon**: Three-mode support:
+  - **Symbolic mode** (default): Custom SVG icons from `icons/symbolic/` directory
+  - **Material mode**: Material Design SVG icons from `icons/material/` directory  
+  - **Emoji mode**: Robot emoji (🤖) + colored circle emoji (🟢/🟡/🔴)
+- **Panel Dropdown**: List of URLs with status icons, click to open in browser
+- **Settings List**: URLs with status icons, live updates
+- **Icon Style**: User-configurable choice between Symbolic, Material, or Emoji indicators
 - **Icon Size**: Adjustable size (10-64px) for panel indicator
+- **Icon Files**: All icons loaded from organized `icons/symbolic/` and `icons/material/` subdirectories
 
 ### Status Logic
 - **Green**: HTTP 200 response received
@@ -242,17 +245,15 @@ The extension follows a modular architecture with separate files for different r
 - `extension.js` (80 lines) - main coordinator (root) ⭐ 76% smaller than original
 - `prefs.js` (210 lines) - preferences UI (root) ⭐ REDUCED
 - `lib/logger.js` (37 lines) - centralized logging with debug mode
-- `lib/iconHelper.js` (163 lines) - **settings-aware** icon management ⭐ IMPROVED
+- `lib/iconHelper.js` (120 lines) - **file-based icon management with theme coloring** ⭐ IMPROVED
 - `lib/statusManager.js` (67 lines) - status persistence
 - `lib/urlPinger.js` (73 lines) - HTTP requests and network checks
 - `lib/pingScheduler.js` (47 lines) - periodic ping scheduling
 - `lib/panelIndicator.js` (125 lines) - panel UI and menu
 - `lib/notificationManager.js` (38 lines) - notifications
 - ES6 module imports/exports for clean dependencies
-- **IconHelper eliminates style conditionals throughout codebase** (DRY)
-- New icon styles can be added by modifying only IconHelper (KISS)
-- Inline SVG rendering with dynamic color injection
-- No static SVG file dependencies
+- **IconHelper loads icons from organized subdirectories** (DRY + Maintainable)
+- Icon files organized in `icons/symbolic/` and `icons/material/` subdirectories
 - Proper resource cleanup in disable() with session.abort()
 - Event-driven menu updates via GSettings signals
 - Professional logging: silent in production, verbose in debug mode
@@ -306,61 +307,39 @@ The extension follows a modular architecture with separate files for different r
 
 **Three Icon Styles Available:**
 
-1. **Symbolic (Default)** - Native GNOME symbolic icons
-2. **Material** - Custom Material Design SVG circles  
+1. **Symbolic (Default)** - Custom SVG icons from `icons/symbolic/` directory
+2. **Material** - Material Design SVG icons from `icons/material/` directory
 3. **Emoji** - Unicode emoji characters
 
-**Implementation by Context:**
+**Implementation:**
 
-#### Panel/Shell Context (St.Icon):
-
-**Symbolic Style** (NEW - Default):
-- **Technology**: `Gio.ThemedIcon` with system icon names
-- **Why**: Best GNOME integration, respects user theme
-- **Icons**: `computer-symbolic`, `emblem-default-symbolic`, `dialog-warning-symbolic`, `dialog-error-symbolic`
+- **File-based Architecture**: Both symbolic and material styles load SVG files from organized subdirectories
+- **Single Source of Truth**: `ICON_FILENAMES` map in IconHelper defines which file to use for each icon type
+- **Technology**: `Gio.BytesIcon` with dynamically modified SVG content
+- **Theme-aware Coloring**: 
+  - Loads SVG files and replaces hardcoded `fill="#hexcolor"` with `fill="currentColor"`
+  - Icons automatically inherit the panel text color from the active GNOME Shell theme
+  - Works seamlessly with light, dark, and custom themes
+  - No manual color configuration needed
+- **Why File-based**:
+  - Easy to update icons without code changes
+  - Designers can work directly with SVG files
+  - Better separation of assets and logic (DRY)
+  - No hardcoded SVG templates to maintain
 - **Benefits**:
-  - Adapts to light/dark themes automatically
-  - Zero bytes added to extension
-  - Native accessibility support
-  - Follows GNOME Human Interface Guidelines
-  - Professional appearance
-
-**Material Style**:
-- **Technology**: Inline SVG via `Gio.BytesIcon`
-- **Why**: Custom branding with Material Design
-- **Approach**: 
-  - SVG templates with Material Design circles
-  - Dynamic color injection at runtime
-  - Custom brand colors (#2ecc71, #e74c3c, #f1c40f)
-- **Benefits**: Full control, consistent appearance, no theme dependency
+  - ✅ Maintainable: Update icons by replacing SVG files
+  - ✅ Flexible: Add new icon styles by creating new subdirectories
+  - ✅ Clean: No inline SVG code cluttering the codebase
+  - ✅ Designer-friendly: Standard SVG workflow
+  - ✅ Theme-integrated: Icons match system appearance automatically
 
 **Emoji Style**:
-- **Technology**: Unicode text via `St.Label`
-- **Why**: Universal compatibility, colorful
-- **Icons**: 🤖🟢🟡🔴
-- **Benefits**: Works everywhere, no dependencies
+- **Technology**: Unicode text via `St.Label` or `Gtk.Label`
+- **Why**: Universal compatibility, colorful, no files needed
+- **Icons**: 🤖🟢🟡🔴🔄⚙️
+- **Benefits**: Works everywhere, zero dependencies, instant rendering
 
-#### Preferences Context (Gtk.Image):
-- **Technology**: GTK Symbolic Icons from system theme (always used)
-- **Why**: GTK has native symbolic icon support built-in
-- **Approach**:
-  - Icon names: `emblem-ok-symbolic`, `dialog-error-symbolic`, etc.
-  - System looks up icons in `/usr/share/icons/[Theme]/scalable/`
-  - CSS classes colorize: `.success`, `.error`, `.warning`
-- **Benefits**: 
-  - Zero bytes added to extension
-  - Automatic theme integration
-  - Native accessibility support
-  - Respects user's theme preferences
-
-**Not Using Icon Fonts Because:**
-- ❌ Not the GNOME way (symbolic icons are standard)
-- ❌ Poor accessibility compared to native icons
-- ❌ Would add ~150KB to extension bundle
-- ❌ Harder to integrate with system themes
-- ❌ Shell context doesn't easily support custom fonts
-
-**Key Decision**: Use the right tool for each context and give users choice (KISS + User Freedom).
+**Key Decision**: Use file-based icons for professional styles, emoji for simplicity (KISS + Maintainability).
 
 ### URL Validation
 - Uses `GLib.Uri.parse()` for proper URL parsing

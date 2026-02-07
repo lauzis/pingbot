@@ -7,7 +7,7 @@ import {IconHelper, IconType} from './lib/iconHelper.js';
 export default class PingBotPreferences extends ExtensionPreferences {
     fillPreferencesWindow(window) {
         const settings = this.getSettings();
-        const iconHelper = new IconHelper(settings);
+        const iconHelper = new IconHelper(settings, this.dir);
         
         const page = new Adw.PreferencesPage();
         const group = new Adw.PreferencesGroup({
