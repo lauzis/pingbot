@@ -79,7 +79,7 @@ The extension follows a modular architecture with separate files for different r
 - **Features**:
   - **Settings-aware**: Checks icon-style internally, no caller conditionals needed
   - **Single source of truth**: All icon logic in one place
-  - **File-based icons**: Loads SVG files from `icons/symbolic/` and `icons/material/` subdirectories
+  - **File-based icons**: Loads SVG files from `icons/freeicons/` and `icons/material/` subdirectories
   - **Theme-integrated**: All SVG icons use `fill="currentColor"` to inherit panel text color
   - **Extensible**: New icon styles added in one method only
   - **Context-adaptive**: Works for both Shell (St) and GTK4 contexts
@@ -198,14 +198,14 @@ The extension follows a modular architecture with separate files for different r
 
 ### Visual Indicators
 - **Panel Icon**: Three-mode support:
-  - **Symbolic mode** (default): Custom SVG icons from `icons/symbolic/` directory
+  - **Freeicons mode** (default): Custom SVG icons from `icons/freeicons/` directory
   - **Material mode**: Material Design SVG icons from `icons/material/` directory  
   - **Emoji mode**: Robot emoji (🤖) + colored circle emoji (🟢/🟡/🔴)
 - **Panel Dropdown**: List of URLs with status icons, click to open in browser
 - **Settings List**: URLs with status icons, live updates
-- **Icon Style**: User-configurable choice between Symbolic, Material, or Emoji indicators
+- **Icon Style**: User-configurable choice between Freeicons, Material, or Emoji indicators
 - **Icon Size**: Adjustable size (10-64px) for panel indicator
-- **Icon Files**: All icons loaded from organized `icons/symbolic/` and `icons/material/` subdirectories
+- **Icon Files**: All icons loaded from organized `icons/freeicons/` and `icons/material/` subdirectories
 
 ### Status Logic
 - **Green**: HTTP 200 response received
@@ -253,7 +253,7 @@ The extension follows a modular architecture with separate files for different r
 - `lib/notificationManager.js` (38 lines) - notifications
 - ES6 module imports/exports for clean dependencies
 - **IconHelper loads icons from organized subdirectories** (DRY + Maintainable)
-- Icon files organized in `icons/symbolic/` and `icons/material/` subdirectories
+- Icon files organized in `icons/freeicons/` and `icons/material/` subdirectories
 - Proper resource cleanup in disable() with session.abort()
 - Event-driven menu updates via GSettings signals
 - Professional logging: silent in production, verbose in debug mode
@@ -307,13 +307,13 @@ The extension follows a modular architecture with separate files for different r
 
 **Three Icon Styles Available:**
 
-1. **Symbolic (Default)** - Custom SVG icons from `icons/symbolic/` directory
+1. **Freeicons (Default)** - Custom SVG icons from `icons/freeicons/` directory
 2. **Material** - Material Design SVG icons from `icons/material/` directory
 3. **Emoji** - Unicode emoji characters
 
 **Implementation:**
 
-- **File-based Architecture**: Both symbolic and material styles load SVG files from organized subdirectories
+- **File-based Architecture**: Both freeicons and material styles load SVG files from organized subdirectories
 - **Single Source of Truth**: `ICON_FILENAMES` map in IconHelper defines which file to use for each icon type
 - **Technology**: `Gio.BytesIcon` for loading SVG content
 - **Theme-integrated Coloring**: 

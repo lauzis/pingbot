@@ -65,11 +65,11 @@ export default class PingBotPreferences extends ExtensionPreferences {
             title: 'Icon Style',
             subtitle: 'Choose icon appearance for panel',
             model: new Gtk.StringList({
-                strings: ['Symbolic (Native GNOME)', 'Material Icons', 'Emoji']
+                strings: ['Freeicons', 'Material Icons', 'Emoji']
             }),
         });
 
-        const styles = ['symbolic', 'material', 'emoji'];
+        const styles = ['freeicons', 'material', 'emoji'];
         const currentStyle = settings.get_string('icon-style');
         styleRow.selected = Math.max(0, styles.indexOf(currentStyle));
 
