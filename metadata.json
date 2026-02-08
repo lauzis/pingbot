@@ -8,6 +8,8 @@
   "url": "https://github.com/lauzis/pingbot",
   "icon": "icon.png",
   "donations": {
-    "paypal": "https://www.paypal.com/donate?token=mBDA_icmxwBEaawsjEBTbO0DqE74jH7k_ZX4_Bgtju4TKj35HO_aqQ0tFD8Wyh-TZ-xGHEk8dBrRAuJ7"
+    "paypal": "https://www.paypal.com/paypalme/Lauzis",
+    "github": "https://github.com/sponsors/lauzis",
+    "custom": "https://www.paypal.com/donate?token=mBDA_icmxwBEaawsjEBTbO0DqE74jH7k_ZX4_Bgtju4TKj35HO_aqQ0tFD8Wyh-TZ-xGHEk8dBrRAuJ7"
   }
 }
