@@ -369,7 +369,9 @@ export default class PingBotPreferences extends ExtensionPreferences {
         window.add(page);
 
         window.connect('close-request', () => {
-            settingsSignals.forEach(id => settings.disconnect(id));
+            settingsSignals.forEach(id => {
+                settings.disconnect(id);
+            });
         });
     }
 }

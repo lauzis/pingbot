@@ -70,7 +70,7 @@ The extension follows a modular architecture with separate files for different r
 - **Purpose**: Settings-aware centralized icon rendering for panel and preferences
 - **Constructor**: `new IconHelper(settings, extensionDir, logger)` - requires GSettings, extension directory, and optional logger
 - **Key Methods**:
-  - `createPanelIcon(iconType)`: Returns icon for panel/menu (BytesIcon or emoji string)
+  - `createPanelIcon(iconType)`: Returns icon for panel/menu (FileIcon or emoji string)
   - `createPrefsIcon(iconType, Gtk)`: Returns widget for preferences (Gtk.Image or Gtk.Label)
   - `updatePrefsIcon(widget, iconType)`: Updates existing preferences widget
   - `getIconStyle()`: Returns current icon style ('freeicons', 'material', or 'emoji')
@@ -138,7 +138,7 @@ The extension follows a modular architecture with separate files for different r
   - Uses IconHelper instance (no style conditionals in this file)
   - IconHelper handles Material vs. emoji automatically
   - Click URLs to open in default browser
-  - Inline SVG rendering via Gio.BytesIcon
+  - Inline SVG rendering via Gio.FileIcon
 
 #### NotificationManager (`lib/notificationManager.js`)
 - **Type**: Notification Module (38 lines)
@@ -315,7 +315,7 @@ The extension follows a modular architecture with separate files for different r
 
 - **File-based Architecture**: Both freeicons and material styles load SVG files from organized subdirectories
 - **Single Source of Truth**: `ICON_FILENAMES` map in IconHelper defines which file to use for each icon type
-- **Technology**: `Gio.BytesIcon` for loading SVG content
+- **Technology**: `Gio.FileIcon` for loading SVG content
 - **Theme-integrated Coloring**: 
   - All SVG icon files use `fill="currentColor"` attribute
   - Icons automatically inherit the panel text color from the active GNOME Shell theme
