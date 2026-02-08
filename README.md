@@ -172,9 +172,9 @@ gnome-extensions info pingbot@gudlenieks.lv
 ### Version 1.0.5 (February 2, 2026)
 
 **New Features:**
-- Added Material Design icon style option alongside emoji indicators
-- Users can now choose between Material SVG icons or emoji in preferences
-- Added configurable icon size (10-64px) for panel indicator
+- Added 3 icon style options: Freeicons (default), Material Design, and Emoji
+- Users can now choose their preferred icon style in preferences
+- Added configurable icon size (10-64px) for panel indicator, default is 22px
 
 **Improvements:**
 - Material icons now inherit theme's foreground color for better integration

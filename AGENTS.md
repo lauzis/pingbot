@@ -73,7 +73,7 @@ The extension follows a modular architecture with separate files for different r
   - `createPanelIcon(iconType)`: Returns icon for panel/menu (BytesIcon or emoji string)
   - `createPrefsIcon(iconType, Gtk)`: Returns widget for preferences (Gtk.Image or Gtk.Label)
   - `updatePrefsIcon(widget, iconType)`: Updates existing preferences widget
-  - `getIconStyle()`: Returns current icon style ('symbolic', 'material', or 'emoji')
+  - `getIconStyle()`: Returns current icon style ('freeicons', 'material', or 'emoji')
   - `getIconSize()`: Returns configured icon size
 - **Icon Types**: STATUS_GREEN, STATUS_YELLOW, STATUS_RED, ROBOT, REFRESH, SETTINGS
 - **Features**:

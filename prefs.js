@@ -7,6 +7,7 @@ import {IconHelper, IconType} from './lib/iconHelper.js';
 export default class PingBotPreferences extends ExtensionPreferences {
     fillPreferencesWindow(window) {
         const settings = this.getSettings();
+        const settingsSignals = [];
         const iconHelper = new IconHelper(settings, this.dir);
         
         const page = new Adw.PreferencesPage();
@@ -171,7 +172,7 @@ export default class PingBotPreferences extends ExtensionPreferences {
         
         rebuildPreviewRows();
         
-        settings.connect('changed::icon-style', rebuildPreviewRows);
+        settingsSignals.push(settings.connect('changed::icon-style', rebuildPreviewRows));
         
         const previewRow = new Adw.ActionRow();
         previewRow.set_child(previewBox);
@@ -363,23 +364,27 @@ export default class PingBotPreferences extends ExtensionPreferences {
         urlsGroup.add(urlListRow);
         
         // Watch for URL list changes and refresh
-        settings.connect('changed::ping-urls', () => {
+        settingsSignals.push(settings.connect('changed::ping-urls', () => {
             refreshUrlList();
-        });
+        }));
         
         // Watch for status changes and update icons
-        settings.connect('changed::url-statuses', () => {
+        settingsSignals.push(settings.connect('changed::url-statuses', () => {
             updateAllIcons();
-        });
+        }));
         
         // Watch for icon style changes and rebuild list
-        settings.connect('changed::icon-style', () => {
+        settingsSignals.push(settings.connect('changed::icon-style', () => {
             refreshUrlList();
-        });
+        }));
         
         refreshUrlList();
         
         page.add(urlsGroup);
         window.add(page);
+
+        window.connect('close-request', () => {
+            settingsSignals.forEach(id => settings.disconnect(id));
+        });
     }
 }
