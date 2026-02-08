@@ -205,15 +205,6 @@ export default class PingBotPreferences extends ExtensionPreferences {
         };
         
         // Function to create URL row with status icon
-        const getIconTypeForStatus = (status) => {
-            if (status === 'green') {
-                return IconType.STATUS_GREEN;
-            } else if (status === 'red') {
-                return IconType.STATUS_RED;
-            }
-            return IconType.STATUS_YELLOW;
-        };
-
         const createUrlRow = (url) => {
             const row = new Gtk.Box({
                 orientation: Gtk.Orientation.HORIZONTAL,
@@ -225,7 +216,7 @@ export default class PingBotPreferences extends ExtensionPreferences {
             const statuses = getUrlStatuses();
             const status = statuses[url] || 'yellow';
             
-            const iconType = getIconTypeForStatus(status);
+            const iconType = iconHelper.getIconTypeFromStatus(status);
             
             const statusWidget = iconHelper.createPrefsIcon(iconType, Gtk);
             row._statusWidget = statusWidget;
@@ -264,7 +255,7 @@ export default class PingBotPreferences extends ExtensionPreferences {
             while (child) {
                 if (child._statusWidget && child._url) {
                     const status = statuses[child._url] || 'yellow';
-                    const iconType = getIconTypeForStatus(status);
+                    const iconType = iconHelper.getIconTypeFromStatus(status);
                     
                     iconHelper.updatePrefsIcon(child._statusWidget, iconType);
                 }
