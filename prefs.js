@@ -83,7 +83,7 @@ export default class PingBotPreferences extends ExtensionPreferences {
         // Icon Size
         const sizeRow = new Adw.SpinRow({
             title: 'Icon Size',
-            subtitle: 'Size in pixels (default: 16)',
+            subtitle: 'Size in pixels (default: 22)',
             adjustment: new Gtk.Adjustment({
                 lower: 10,
                 upper: 64,
