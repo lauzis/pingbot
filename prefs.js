@@ -3,9 +3,11 @@ import Gtk from 'gi://Gtk';
 import GLib from 'gi://GLib';
 import {ExtensionPreferences} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 import {IconHelper, IconType} from './lib/iconHelper.js';
+import {Logger, LOG_DOMAIN} from './lib/logger.js';
 
 export default class PingBotPreferences extends ExtensionPreferences {
     fillPreferencesWindow(window) {
+        const logger = new Logger(LOG_DOMAIN);
         const settings = this.getSettings();
         const settingsSignals = [];
         const iconHelper = new IconHelper(settings, this.dir);
@@ -328,7 +330,7 @@ export default class PingBotPreferences extends ExtensionPreferences {
                 } catch (e) {
                     // Invalid URL format
                     urlEntry.add_css_class('error');
-                    console.error('Invalid URL:', e.message);
+                    logger.error('Invalid URL', e);
                 }
             }
         });

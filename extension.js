@@ -5,12 +5,12 @@ import {UrlPinger} from './lib/urlPinger.js';
 import {NotificationManager} from './lib/notificationManager.js';
 import {PanelIndicator} from './lib/panelIndicator.js';
 import {PingScheduler} from './lib/pingScheduler.js';
-import {Logger} from './lib/logger.js';
+import {Logger, LOG_DOMAIN} from './lib/logger.js';
 
 export default class PingBotExtension extends Extension {
     enable() {
         // custom logger/wrapper for easier debugging
-        this._logger = new Logger('pingbot');
+        this._logger = new Logger(LOG_DOMAIN);
 
         // settings and core components
         this._settings = this.getSettings();
