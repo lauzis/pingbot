@@ -11,13 +11,17 @@ Monitor your important websites at a glance. Add URLs to your list, see status i
 Choose your preferred icon style:
 
 **Freeicons (Default)**
+
 ![Freeicons Style](git-images/ping-bot-freeicons.png)
 
 **Material Design**
+
 ![Material Icons Style](git-images/ping-bot-material-icons.png)
 
 **Emoji**
+
 ![Emoji Style](git-images/ping-bot.png)
+
 
 ## Why Ping Bot?
 
