@@ -4,9 +4,10 @@ All notable changes to Ping Bot will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [1.0.5] - 2026-02-02
+## [1.0.6] - 2026-02-14
 
 ### Added
+- Separated CHANGELOG.md from README for better documentation structure
 - 3 icon style options: Freeicons (default), Material Design, and Emoji
 - User-configurable icon style in preferences
 - Configurable icon size (10-64px) for panel indicator, default is 22px
@@ -15,6 +16,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Material icons now inherit theme's foreground color for better integration
 - Green status uses theme text color, while red/yellow use warning colors
 - Icons use SVG with `currentColor` for proper theme support
+- README.md now cleaner and more scannable (reduced by 24%)
+
+## [1.0.5] - 2026-02-02
+
+**Note**: Version 1.0.5 was skipped - rejected by GNOME Shell Extensions review. Features released as 1.0.6 instead.
 
 ## [1.0.4] - 2026-01-05
 

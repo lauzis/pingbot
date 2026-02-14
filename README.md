@@ -3,7 +3,7 @@
 A lightweight GNOME Shell extension that monitors the availability of your websites and services by periodically pinging URLs and displaying their status with visual indicators.
 Monitor your important websites at a glance. Add URLs to your list, see status indicators in the panel:
 🟢 - Everything is ok, all sites reachable.
-🟡 - Unknow or no network.
+🟡 - Unknown or no network.
 🔴 - Some site is not reachable.
 
 ## Icon Styles
@@ -187,7 +187,7 @@ gnome-extensions info pingbot@gudlenieks.lv
 
 ## Recent Updates
 
-**Version 1.0.5** (February 2, 2026) - Added icon styles (Freeicons, Material, Emoji) and configurable icon size.
+**Version 1.0.6** (February 14, 2026) - Added icon styles (Freeicons, Material, Emoji), configurable icon size, and separated CHANGELOG.md for cleaner documentation.
 
 See [CHANGELOG.md](CHANGELOG.md) for complete version history.
 
@@ -224,5 +224,5 @@ Donate via GitHub: https://github.com/sponsors/lauzis
 
 ---
 
-**Version**: 5
-**Last Updated**: February 8, 2026
+**Version**: 6
+**Last Updated**: February 14, 2026

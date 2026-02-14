@@ -308,13 +308,22 @@ The extension follows a modular architecture with separate files for different r
 - ❌ Mixed concerns (UI, logic, and data storage separated)
 
 ## Dependencies
-- GNOME Shell 45/46
+
+### GNOME Platform
+- GNOME Shell
 - GTK4 (gi://Gtk)
 - Adwaita (gi://Adw)
 - St (gi://St) - Shell Toolkit
-- Gio (gi://Gio) - I/O operations
-- GLib (gi://GLib) - Core utilities, URI parsing
+
+### Core Libraries
+- Gio (gi://Gio) - I/O operations and network monitoring
+- GLib (gi://GLib) - Core utilities, URI parsing, timeouts
 - Soup (gi://Soup) - HTTP client library
+
+### GNOME Shell APIs
+- Extension - Extension lifecycle management
+- ExtensionPreferences - Settings UI framework
+- Main - Shell integration
 - MessageTray - Notification system
 - PanelMenu - Panel integration
 - PopupMenu - Dropdown menu
