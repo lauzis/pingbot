@@ -6,7 +6,18 @@ Monitor your important websites at a glance. Add URLs to your list, see status i
 🟡 - Unknow or no network.
 🔴 - Some site is not reachable.
 
-![Ping Bot Screenshot](git-images/ping-bot.png)
+## Icon Styles
+
+Choose your preferred icon style:
+
+**Freeicons (Default)**
+![Freeicons Style](git-images/ping-bot-freeicons.png)
+
+**Material Design**
+![Material Icons Style](git-images/ping-bot-material-icons.png)
+
+**Emoji**
+![Emoji Style](git-images/ping-bot.png)
 
 ## Why Ping Bot?
 
@@ -135,6 +146,9 @@ The extension uses GSettings to store:
 - `ping-interval` (integer): Time between pings in minutes
 - `ping-urls` (array of strings): List of URLs to monitor
 - `url-statuses` (JSON string): Cached status for each URL
+- `request-timeout` (integer): Maximum time to wait for HTTP response in seconds
+- `icon-style` (string): Style of the panel icon (freeicons, material, or emoji)
+- `icon-size` (integer): Size of the panel icon in pixels
 
 ## Development
 

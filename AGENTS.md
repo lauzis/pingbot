@@ -161,6 +161,7 @@ The extension follows a modular architecture with separate files for different r
 - **Key Methods**:
   - `fillPreferencesWindow(window)`: Constructs the preferences UI with:
     - Ping interval spin row (1-1440 minutes)
+    - Request timeout spin row (1-30 seconds)
     - URL list with live status indicators
     - Add URL functionality with validation
     - Delete URL buttons for each entry
@@ -180,13 +181,16 @@ The extension follows a modular architecture with separate files for different r
 #### metadata.json
 - **Extension Name**: Ping Bot
 - **UUID**: `pingbot@gudlenieks.lv`
-- **Target GNOME Shell Version**: 45, 46
+- **Target GNOME Shell Version**: 45, 46, 47, 48, 49
 - **Description**: Monitor website availability with visual indicators
 
 #### GSettings Schema (`schemas/org.gnome.shell.extensions.pingbot.gschema.xml`)
 - **ping-interval** (int): Time between pings in minutes (1-1440)
 - **ping-urls** (array of strings): List of URLs to monitor
 - **url-statuses** (JSON string): Cached status for each URL (green/yellow/red)
+- **request-timeout** (int): HTTP request timeout in seconds (1-30)
+- **icon-style** (string): Panel icon style ('freeicons', 'material', 'emoji')
+- **icon-size** (int): Panel icon size in pixels (10-64)
 
 ### Resources
 
