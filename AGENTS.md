@@ -13,6 +13,7 @@ This project follows industry-standard software engineering principles:
 - Each module has a single, clear purpose
 - Methods do one thing and do it well
 - Simple solutions are preferred over clever ones
+- **All code must be kept KISS**
 
 ### DRY (Don't Repeat Yourself)
 - Single source of truth for all functionality
@@ -20,10 +21,17 @@ This project follows industry-standard software engineering principles:
 - Logger provides one logging interface for the entire extension
 - StatusManager is the only place that manages URL statuses
 - Code reuse through modular architecture
+- **All code must be kept DRY**
+
+### Documentation Standards
+- **README and documentation should NOT be a wall of text**
+- Use clear headings, bullet points, and short paragraphs
+- Keep information scannable and easy to navigate
+- Prioritize clarity and brevity over exhaustive detail
 
 ### Examples in This Codebase:
 - **DRY**: IconHelper eliminated 8+ duplicate if/else blocks for icon style checks
-- **KISS**: Each lib/ module has <100 lines, focused on one responsibility
+- **KISS**: Each lib/ module is focused on one responsibility
 - **DRY**: SVG templates stored once in IconHelper, not duplicated across files
 - **KISS**: Settings-aware classes hide complexity from consumers
 - **DRY**: Network connectivity check happens once in UrlPinger, not per URL
@@ -35,7 +43,7 @@ This project follows industry-standard software engineering principles:
 The extension follows a modular architecture with separate files for different responsibilities:
 
 #### Main Extension (`extension.js`)
-- **Type**: Main Extension Coordinator (80 lines)
+- **Type**: Main Extension Coordinator
 - **Location**: Root directory
 - **Extends**: `Extension` from GNOME Shell
 - **Purpose**: Extension lifecycle and module coordination
@@ -45,10 +53,9 @@ The extension follows a modular architecture with separate files for different r
   - `_connectSignals()`: Wires up GSettings change handlers
   - `_updateMainStatus()`: Updates panel icon based on overall status
 - **Imports**: All modules from `./lib/` directory
-- **Size**: 76% smaller than original monolithic design
 
 #### Logger (`lib/logger.js`)
-- **Type**: Logging Utility (37 lines)
+- **Type**: Logging Utility
 - **Location**: `lib/` directory
 - **Exports**: `Logger`
 - **Purpose**: Centralized logging with debug mode support
@@ -64,7 +71,7 @@ The extension follows a modular architecture with separate files for different r
   - Structured logging with context objects
 
 #### IconHelper (`lib/iconHelper.js`)
-- **Type**: Icon Management Utility (222 lines)
+- **Type**: Icon Management Utility
 - **Location**: `lib/` directory
 - **Exports**: `IconHelper` (class), `IconType` (constants)
 - **Purpose**: Settings-aware centralized icon rendering for panel and preferences
@@ -86,7 +93,7 @@ The extension follows a modular architecture with separate files for different r
   - All icon files properly configured with currentColor for automatic theme adaptation
 
 #### StatusManager (`lib/statusManager.js`)
-- **Type**: Status Persistence Module (67 lines)
+- **Type**: Status Persistence Module
 - **Location**: `lib/` directory
 - **Exports**: `PingStatus`, `StatusManager`
 - **Purpose**: Manages URL status storage and retrieval
@@ -97,7 +104,7 @@ The extension follows a modular architecture with separate files for different r
   - `setAllYellow(urls)`: Batch operation when network is unavailable
 
 #### UrlPinger (`lib/urlPinger.js`)
-- **Type**: HTTP Request Module (73 lines)
+- **Type**: HTTP Request Module
 - **Location**: `lib/` directory
 - **Exports**: `UrlPinger`
 - **Purpose**: Handles all HTTP pinging and network connectivity
@@ -112,7 +119,7 @@ The extension follows a modular architecture with separate files for different r
   - Debug logging for ping operations
 
 #### PingScheduler (`lib/pingScheduler.js`)
-- **Type**: Scheduling Module (47 lines)
+- **Type**: Scheduling Module
 - **Location**: `lib/` directory
 - **Exports**: `PingScheduler`
 - **Purpose**: Manages periodic URL pinging
@@ -126,7 +133,7 @@ The extension follows a modular architecture with separate files for different r
   - Triggers notifications on URL failures
 
 #### PanelIndicator (`lib/panelIndicator.js`)
-- **Type**: UI Module (125 lines)
+- **Type**: UI Module
 - **Location**: `lib/` directory
 - **Exports**: `PanelIndicator`
 - **Purpose**: Manages panel button and dropdown menu
@@ -141,7 +148,7 @@ The extension follows a modular architecture with separate files for different r
   - Inline SVG rendering via Gio.FileIcon
 
 #### NotificationManager (`lib/notificationManager.js`)
-- **Type**: Notification Module (38 lines)
+- **Type**: Notification Module
 - **Location**: `lib/` directory
 - **Exports**: `NotificationManager`
 - **Purpose**: Handles GNOME desktop notifications
@@ -153,7 +160,7 @@ The extension follows a modular architecture with separate files for different r
   - Debug logging for notification events
 
 #### PingBotPreferences (`prefs.js`)
-- **Type**: Preferences UI Class (210 lines)
+- **Type**: Preferences UI Class
 - **Location**: Root directory
 - **Extends**: `ExtensionPreferences`
 - **Purpose**: Manages extension settings and preferences UI
@@ -197,6 +204,13 @@ The extension follows a modular architecture with separate files for different r
 #### stylesheet.css
 - Error state styling for invalid URL inputs
 - Red border and light red background for validation errors
+
+#### release.sh
+- Automated release packaging script
+- **Important**: When adding new files to the project, review if they should be excluded from releases
+- **Developer-only files to exclude**: AGENTS.md, development tools, test files, build scripts
+- **User-facing files to include**: README.md, CHANGELOG.md, LICENSE, all extension files
+- Current exclusions: `.git*`, `release.sh`, `schemas/gschemas.compiled`, `git-images/`, `.zip`, `.idea/`, `AGENTS.md`
 
 ## Features Implementation
 
@@ -246,15 +260,15 @@ The extension follows a modular architecture with separate files for different r
 ### Code Organization
 - Modular architecture with separate files for each responsibility
 - Standard `lib/` directory structure for helper modules
-- `extension.js` (80 lines) - main coordinator (root) ⭐ 76% smaller than original
-- `prefs.js` (210 lines) - preferences UI (root) ⭐ REDUCED
-- `lib/logger.js` (37 lines) - centralized logging with debug mode
-- `lib/iconHelper.js` (222 lines) - **file-based icon management with theme integration** ⭐ IMPROVED
-- `lib/statusManager.js` (67 lines) - status persistence
-- `lib/urlPinger.js` (73 lines) - HTTP requests and network checks
-- `lib/pingScheduler.js` (47 lines) - periodic ping scheduling
-- `lib/panelIndicator.js` (125 lines) - panel UI and menu
-- `lib/notificationManager.js` (38 lines) - notifications
+- `extension.js` - main coordinator (root)
+- `prefs.js` - preferences UI (root)
+- `lib/logger.js` - centralized logging with debug mode
+- `lib/iconHelper.js` - **file-based icon management with theme integration**
+- `lib/statusManager.js` - status persistence
+- `lib/urlPinger.js` - HTTP requests and network checks
+- `lib/pingScheduler.js` - periodic ping scheduling
+- `lib/panelIndicator.js` - panel UI and menu
+- `lib/notificationManager.js` - notifications
 - ES6 module imports/exports for clean dependencies
 - **IconHelper loads icons from organized subdirectories** (DRY + Maintainable)
 - Icon files organized in `icons/freeicons/` and `icons/material/` subdirectories
@@ -287,7 +301,7 @@ The extension follows a modular architecture with separate files for different r
 - **Reduced bugs**: Less code duplication = fewer places for bugs to hide
 
 ### Anti-patterns Avoided:
-- ❌ God objects (extension.js was 350+ lines, now 80)
+- ❌ God objects (refactored monolithic extension.js into focused modules)
 - ❌ Scattered conditionals (icon style checks centralized)
 - ❌ Copy-paste code (SVG templates stored once)
 - ❌ Magic numbers (constants exported from helper modules)

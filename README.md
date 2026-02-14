@@ -185,84 +185,11 @@ gnome-extensions info pingbot@gudlenieks.lv
 - Network check uses GNOME's native NetworkMonitor API
 - Notifications are throttled to once per hour to avoid spam
 
-## Changelog
+## Recent Updates
 
-### Version 1.0.5 (February 2, 2026)
+**Version 1.0.5** (February 2, 2026) - Added icon styles (Freeicons, Material, Emoji) and configurable icon size.
 
-**New Features:**
-- Added 3 icon style options: Freeicons (default), Material Design, and Emoji
-- Users can now choose their preferred icon style in preferences
-- Added configurable icon size (10-64px) for panel indicator, default is 22px
-
-**Improvements:**
-- Material icons now inherit theme's foreground color for better integration
-- Green status uses theme text color, while red/yellow use warning colors
-- Icons use SVG with `currentColor` for proper theme support
-
-### Version 1.0.4 (January 5, 2026)
-
-**New Features:**
-- Added "Force Recheck" option in the panel menu to immediately refresh all URL statuses
-
-### Version 1.0.3 (November 22, 2025)
-
-**Improvements:**
-- Added debug logging for settings changes (URL list updates, interval changes)
-- Added debug logging for scheduler events (start, stop, timer trigger)
-- Relaxed network check to allow local network monitoring (was requiring full internet)
-- Fixed issue where adding URLs or changing interval didn't trigger immediate update
-- Improved logging context for easier debugging
-- Updated metadata for GNOME Shell 47+ support
-- Tested on Ubuntu 24.10 (GNOME 47), Ubuntu 25.04 (GNOME 48), and Ubuntu 25.10 (GNOME 49)
-
-### Version 1.0.2 (November 13, 2025)
-
-**Improvements:**
-- Replaced Mozilla portal network check with native GNOME `Gio.NetworkMonitor` API
-  - More reliable network connectivity detection
-  - No external HTTP requests for connectivity checks
-  - Uses GNOME's built-in network monitoring system
-- Added extension icon (128x128 PNG) generated from favicon
-- Added `release.sh` script for automated release packaging
-  - Excludes development files (.git, .idea, git-images, etc.)
-  - Creates clean zip ready for distribution
-- Refactored code into modular architecture
-  - Created `lib/` directory for helper modules
-  - Split extension.js into 6 focused modules:
-    - `logger.js` - Centralized logging with debug mode
-    - `statusManager.js` - Status persistence
-    - `urlPinger.js` - HTTP requests
-    - `pingScheduler.js` - Periodic scheduling
-    - `panelIndicator.js` - Panel UI & menu
-    - `notificationManager.js` - Notifications
-  - Main class reduced by 76% (317 to 80 lines)
-  - Better code organization and maintainability
-- Improved resource management
-  - Proper timeout cleanup before creating new ones
-  - Session tracking with `session.abort()` on disable
-  - Prevents memory leaks from pending HTTP requests
-- Professional logging system
-  - Silent in production (only lifecycle + errors)
-  - Verbose debug mode: `G_MESSAGES_DEBUG=pingbot`
-  - Uses GNOME's native logging functions
-  - Respects privacy (no URL logging by default)
-
-### Version 1.0.1 (November 2025)
-
-Initial release with the following features:
-
-- Panel icon with robot emoji and colored status indicator
-- Click panel icon to see dropdown menu with all monitored URLs
-- Click URLs in dropdown to open in default browser
-- Settings page with URL management (add/delete)
-- Real-time status updates with colored emoji indicators (green/yellow/red)
-- Configurable ping interval (1-1440 minutes)
-- Network connectivity detection before pinging
-- URL validation (only HTTP/HTTPS allowed)
-- Visual error feedback for invalid URLs
-- Persistent status storage across sessions
-- GNOME notifications for failures (once per hour)
-- Support for GNOME Shell 45/46
+See [CHANGELOG.md](CHANGELOG.md) for complete version history.
 
 ## Compatibility
 
