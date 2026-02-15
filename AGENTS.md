@@ -3,6 +3,39 @@
 ## Overview
 Ping Bot is a GNOME Shell extension that monitors website availability through periodic HTTP pinging with visual status indicators.
 
+## Coding Principles
+
+This project follows industry-standard software engineering principles:
+
+### KISS (Keep It Simple, Stupid)
+- Write simple, straightforward code that's easy to understand
+- Avoid over-engineering and unnecessary complexity
+- Each module has a single, clear purpose
+- Methods do one thing and do it well
+- Simple solutions are preferred over clever ones
+- **All code must be kept KISS**
+
+### DRY (Don't Repeat Yourself)
+- Single source of truth for all functionality
+- IconHelper centralizes all icon logic (no scattered style checks)
+- Logger provides one logging interface for the entire extension
+- StatusManager is the only place that manages URL statuses
+- Code reuse through modular architecture
+- **All code must be kept DRY**
+
+### Documentation Standards
+- **README and documentation should NOT be a wall of text**
+- Use clear headings, bullet points, and short paragraphs
+- Keep information scannable and easy to navigate
+- Prioritize clarity and brevity over exhaustive detail
+
+### Examples in This Codebase:
+- **DRY**: IconHelper eliminated 8+ duplicate if/else blocks for icon style checks
+- **KISS**: Each lib/ module is focused on one responsibility
+- **DRY**: SVG templates stored once in IconHelper, not duplicated across files
+- **KISS**: Settings-aware classes hide complexity from consumers
+- **DRY**: Network connectivity check happens once in UrlPinger, not per URL
+
 ## Project Structure
 
 ### Core Components
@@ -10,7 +43,7 @@ Ping Bot is a GNOME Shell extension that monitors website availability through p
 The extension follows a modular architecture with separate files for different responsibilities:
 
 #### Main Extension (`extension.js`)
-- **Type**: Main Extension Coordinator (80 lines)
+- **Type**: Main Extension Coordinator
 - **Location**: Root directory
 - **Extends**: `Extension` from GNOME Shell
 - **Purpose**: Extension lifecycle and module coordination
@@ -20,10 +53,9 @@ The extension follows a modular architecture with separate files for different r
   - `_connectSignals()`: Wires up GSettings change handlers
   - `_updateMainStatus()`: Updates panel icon based on overall status
 - **Imports**: All modules from `./lib/` directory
-- **Size**: 76% smaller than original monolithic design
 
 #### Logger (`lib/logger.js`)
-- **Type**: Logging Utility (37 lines)
+- **Type**: Logging Utility
 - **Location**: `lib/` directory
 - **Exports**: `Logger`
 - **Purpose**: Centralized logging with debug mode support
@@ -38,8 +70,30 @@ The extension follows a modular architecture with separate files for different r
   - Uses GNOME's native log() and logError() functions
   - Structured logging with context objects
 
+#### IconHelper (`lib/iconHelper.js`)
+- **Type**: Icon Management Utility
+- **Location**: `lib/` directory
+- **Exports**: `IconHelper` (class), `IconType` (constants)
+- **Purpose**: Settings-aware centralized icon rendering for panel and preferences
+- **Constructor**: `new IconHelper(settings, extensionDir, logger)` - requires GSettings, extension directory, and optional logger
+- **Key Methods**:
+  - `createPanelIcon(iconType)`: Returns icon for panel/menu (FileIcon or emoji string)
+  - `createPrefsIcon(iconType, Gtk)`: Returns widget for preferences (Gtk.Image or Gtk.Label)
+  - `updatePrefsIcon(widget, iconType)`: Updates existing preferences widget
+  - `getIconStyle()`: Returns current icon style ('freeicons', 'material', or 'emoji')
+  - `getIconSize()`: Returns configured icon size
+- **Icon Types**: STATUS_GREEN, STATUS_YELLOW, STATUS_RED, ROBOT, REFRESH, SETTINGS
+- **Features**:
+  - **Settings-aware**: Checks icon-style internally, no caller conditionals needed
+  - **Single source of truth**: All icon logic in one place
+  - **File-based icons**: Loads SVG files from `icons/freeicons/` and `icons/material/` subdirectories
+  - **Theme-integrated**: All SVG icons use `fill="currentColor"` to inherit panel text color
+  - **Extensible**: New icon styles added in one method only
+  - **Context-adaptive**: Works for both Shell (St) and GTK4 contexts
+  - All icon files properly configured with currentColor for automatic theme adaptation
+
 #### StatusManager (`lib/statusManager.js`)
-- **Type**: Status Persistence Module (67 lines)
+- **Type**: Status Persistence Module
 - **Location**: `lib/` directory
 - **Exports**: `PingStatus`, `StatusManager`
 - **Purpose**: Manages URL status storage and retrieval
@@ -50,7 +104,7 @@ The extension follows a modular architecture with separate files for different r
   - `setAllYellow(urls)`: Batch operation when network is unavailable
 
 #### UrlPinger (`lib/urlPinger.js`)
-- **Type**: HTTP Request Module (73 lines)
+- **Type**: HTTP Request Module
 - **Location**: `lib/` directory
 - **Exports**: `UrlPinger`
 - **Purpose**: Handles all HTTP pinging and network connectivity
@@ -65,7 +119,7 @@ The extension follows a modular architecture with separate files for different r
   - Debug logging for ping operations
 
 #### PingScheduler (`lib/pingScheduler.js`)
-- **Type**: Scheduling Module (47 lines)
+- **Type**: Scheduling Module
 - **Location**: `lib/` directory
 - **Exports**: `PingScheduler`
 - **Purpose**: Manages periodic URL pinging
@@ -79,22 +133,22 @@ The extension follows a modular architecture with separate files for different r
   - Triggers notifications on URL failures
 
 #### PanelIndicator (`lib/panelIndicator.js`)
-- **Type**: UI Module (85 lines)
+- **Type**: UI Module
 - **Location**: `lib/` directory
 - **Exports**: `PanelIndicator`
 - **Purpose**: Manages panel button and dropdown menu
 - **Key Methods**:
-  - `updateStatus(status)`: Updates panel icon emoji
+  - `updateStatus(status)`: Updates panel icon based on status
   - `buildMenu()`: Rebuilds dropdown menu with URL list
   - `destroy()`: Cleans up UI elements
 - **Features**:
-  - Robot emoji with colored status indicator
+  - Uses IconHelper instance (no style conditionals in this file)
+  - IconHelper handles Material vs. emoji automatically
   - Click URLs to open in default browser
-  - Settings menu item
-  - Error logging for failures
+  - Inline SVG rendering via Gio.FileIcon
 
 #### NotificationManager (`lib/notificationManager.js`)
-- **Type**: Notification Module (38 lines)
+- **Type**: Notification Module
 - **Location**: `lib/` directory
 - **Exports**: `NotificationManager`
 - **Purpose**: Handles GNOME desktop notifications
@@ -106,7 +160,7 @@ The extension follows a modular architecture with separate files for different r
   - Debug logging for notification events
 
 #### PingBotPreferences (`prefs.js`)
-- **Type**: Preferences UI Class (245 lines)
+- **Type**: Preferences UI Class
 - **Location**: Root directory
 - **Extends**: `ExtensionPreferences`
 - **Purpose**: Manages extension settings and preferences UI
@@ -114,9 +168,16 @@ The extension follows a modular architecture with separate files for different r
 - **Key Methods**:
   - `fillPreferencesWindow(window)`: Constructs the preferences UI with:
     - Ping interval spin row (1-1440 minutes)
-    - URL list with live status indicators (emoji-based)
+    - Request timeout spin row (1-30 seconds)
+    - URL list with live status indicators
     - Add URL functionality with validation
     - Delete URL buttons for each entry
+    - Icon style switcher (Material/Emoji)
+- **Features**:
+  - Uses IconHelper instance (no style conditionals)
+  - Automatically rebuilds list when icon style changes
+  - IconHelper creates appropriate widgets (Gtk.Image or Gtk.Label)
+  - Live status updates via GSettings signals
 - **Validation**: 
   - URL format validation using GLib.Uri.parse()
   - Only HTTP/HTTPS protocols allowed
@@ -127,13 +188,16 @@ The extension follows a modular architecture with separate files for different r
 #### metadata.json
 - **Extension Name**: Ping Bot
 - **UUID**: `pingbot@gudlenieks.lv`
-- **Target GNOME Shell Version**: 45, 46
+- **Target GNOME Shell Version**: 45, 46, 47, 48, 49
 - **Description**: Monitor website availability with visual indicators
 
 #### GSettings Schema (`schemas/org.gnome.shell.extensions.pingbot.gschema.xml`)
 - **ping-interval** (int): Time between pings in minutes (1-1440)
 - **ping-urls** (array of strings): List of URLs to monitor
 - **url-statuses** (JSON string): Cached status for each URL (green/yellow/red)
+- **request-timeout** (int): HTTP request timeout in seconds (1-30)
+- **icon-style** (string): Panel icon style ('freeicons', 'material', 'emoji')
+- **icon-size** (int): Panel icon size in pixels (10-64)
 
 ### Resources
 
@@ -141,12 +205,25 @@ The extension follows a modular architecture with separate files for different r
 - Error state styling for invalid URL inputs
 - Red border and light red background for validation errors
 
+#### release.sh
+- Automated release packaging script
+- **Important**: When adding new files to the project, review if they should be excluded from releases
+- **Developer-only files to exclude**: AGENTS.md, development tools, test files, build scripts
+- **User-facing files to include**: README.md, CHANGELOG.md, LICENSE, all extension files
+- Current exclusions: `.git*`, `release.sh`, `schemas/gschemas.compiled`, `git-images/`, `.zip`, `.idea/`, `AGENTS.md`
+
 ## Features Implementation
 
 ### Visual Indicators
-- **Panel Icon**: Robot emoji (🤖) + colored circle emoji (🟢/🟡/🔴)
-- **Panel Dropdown**: List of URLs with status emojis, click to open in browser
-- **Settings List**: URLs with colored circle emojis, live updates
+- **Panel Icon**: Three-mode support:
+  - **Freeicons mode** (default): Custom SVG icons from `icons/freeicons/` directory
+  - **Material mode**: Material Design SVG icons from `icons/material/` directory  
+  - **Emoji mode**: Robot emoji (🤖) + colored circle emoji (🟢/🟡/🔴)
+- **Panel Dropdown**: List of URLs with status icons, click to open in browser
+- **Settings List**: URLs with status icons, live updates
+- **Icon Style**: User-configurable choice between Freeicons, Material, or Emoji indicators
+- **Icon Size**: Adjustable size (10-64px) for panel indicator
+- **Icon Files**: All icons loaded from organized `icons/freeicons/` and `icons/material/` subdirectories
 
 ### Status Logic
 - **Green**: HTTP 200 response received
@@ -183,33 +260,114 @@ The extension follows a modular architecture with separate files for different r
 ### Code Organization
 - Modular architecture with separate files for each responsibility
 - Standard `lib/` directory structure for helper modules
-- `extension.js` (80 lines) - main coordinator (root) ⭐ 76% smaller than original
-- `prefs.js` (245 lines) - preferences UI (root)
-- `lib/logger.js` (37 lines) - centralized logging with debug mode
-- `lib/statusManager.js` (67 lines) - status persistence
-- `lib/urlPinger.js` (73 lines) - HTTP requests and network checks
-- `lib/pingScheduler.js` (47 lines) - periodic ping scheduling
-- `lib/panelIndicator.js` (85 lines) - panel UI and menu
-- `lib/notificationManager.js` (38 lines) - notifications
+- `extension.js` - main coordinator (root)
+- `prefs.js` - preferences UI (root)
+- `lib/logger.js` - centralized logging with debug mode
+- `lib/iconHelper.js` - **file-based icon management with theme integration**
+- `lib/statusManager.js` - status persistence
+- `lib/urlPinger.js` - HTTP requests and network checks
+- `lib/pingScheduler.js` - periodic ping scheduling
+- `lib/panelIndicator.js` - panel UI and menu
+- `lib/notificationManager.js` - notifications
 - ES6 module imports/exports for clean dependencies
-- Emoji-based visual indicators (no SVG loading in runtime)
+- **IconHelper loads icons from organized subdirectories** (DRY + Maintainable)
+- Icon files organized in `icons/freeicons/` and `icons/material/` subdirectories
 - Proper resource cleanup in disable() with session.abort()
 - Event-driven menu updates via GSettings signals
 - Professional logging: silent in production, verbose in debug mode
 
+## Architectural Decisions
+
+### Why These Principles Matter
+
+#### KISS Examples:
+1. **Single-purpose modules**: Each lib/ file does one thing (logging, pinging, scheduling)
+2. **Settings-aware helpers**: IconHelper knows about settings, callers don't need conditionals
+3. **Simple data flow**: Settings → Manager → UI (unidirectional, predictable)
+4. **No abstractions until needed**: Started with simple code, refactored when patterns emerged
+
+#### DRY Examples:
+1. **IconHelper refactor**: Eliminated 8+ duplicate style checks across files
+2. **StatusManager**: Single source of truth for URL status persistence
+3. **Logger**: One interface for all logging (debug/info/error/warn)
+4. **Network check**: UrlPinger checks connectivity once, not per-URL
+5. **SVG templates**: Stored once, reused everywhere with dynamic color injection
+
+#### Benefits Achieved:
+- **Maintainability**: Add new icon style in 1 place, not 8+
+- **Readability**: Code is self-documenting with clear responsibilities
+- **Testability**: Small, focused modules are easier to test
+- **Extensibility**: New features fit naturally into existing structure
+- **Reduced bugs**: Less code duplication = fewer places for bugs to hide
+
+### Anti-patterns Avoided:
+- ❌ God objects (refactored monolithic extension.js into focused modules)
+- ❌ Scattered conditionals (icon style checks centralized)
+- ❌ Copy-paste code (SVG templates stored once)
+- ❌ Magic numbers (constants exported from helper modules)
+- ❌ Mixed concerns (UI, logic, and data storage separated)
+
 ## Dependencies
-- GNOME Shell 45/46
+
+### GNOME Platform
+- GNOME Shell
 - GTK4 (gi://Gtk)
 - Adwaita (gi://Adw)
 - St (gi://St) - Shell Toolkit
-- Gio (gi://Gio) - I/O operations
-- GLib (gi://GLib) - Core utilities, URI parsing
+
+### Core Libraries
+- Gio (gi://Gio) - I/O operations and network monitoring
+- GLib (gi://GLib) - Core utilities, URI parsing, timeouts
 - Soup (gi://Soup) - HTTP client library
+
+### GNOME Shell APIs
+- Extension - Extension lifecycle management
+- ExtensionPreferences - Settings UI framework
+- Main - Shell integration
 - MessageTray - Notification system
 - PanelMenu - Panel integration
 - PopupMenu - Dropdown menu
 
 ## Technical Highlights
+
+### Icon System Architecture
+
+**Three Icon Styles Available:**
+
+1. **Freeicons (Default)** - Custom SVG icons from `icons/freeicons/` directory
+2. **Material** - Material Design SVG icons from `icons/material/` directory
+3. **Emoji** - Unicode emoji characters
+
+**Implementation:**
+
+- **File-based Architecture**: Both freeicons and material styles load SVG files from organized subdirectories
+- **Single Source of Truth**: `ICON_FILENAMES` map in IconHelper defines which file to use for each icon type
+- **Technology**: `Gio.FileIcon` for loading SVG content
+- **Theme-integrated Coloring**: 
+  - All SVG icon files use `fill="currentColor"` attribute
+  - Icons automatically inherit the panel text color from the active GNOME Shell theme
+  - Works seamlessly with light, dark, and custom themes
+  - No runtime color manipulation needed - handled by the theme engine
+- **Why File-based**:
+  - Easy to update icons without code changes
+  - Designers can work directly with SVG files
+  - Better separation of assets and logic (DRY)
+  - No hardcoded SVG templates to maintain
+- **Benefits**:
+  - ✅ Maintainable: Update icons by replacing SVG files
+  - ✅ Flexible: Add new icon styles by creating new subdirectories
+  - ✅ Clean: No inline SVG code cluttering the codebase
+  - ✅ Designer-friendly: Standard SVG workflow with currentColor
+  - ✅ Theme-integrated: Icons match system appearance automatically
+  - ✅ Performance: No runtime string manipulation or color replacement
+
+**Emoji Style**:
+- **Technology**: Unicode text via `St.Label` or `Gtk.Label`
+- **Why**: Universal compatibility, colorful, no files needed
+- **Icons**: 🤖🟢🟡🔴🔄⚙️
+- **Benefits**: Works everywhere, zero dependencies, instant rendering
+
+**Key Decision**: Use file-based icons for professional styles, emoji for simplicity (KISS + Maintainability).
 
 ### URL Validation
 - Uses `GLib.Uri.parse()` for proper URL parsing

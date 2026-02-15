@@ -23,5 +23,16 @@
       <description>Maximum time to wait for HTTP response before considering URL as failed</description>
       <range min="1" max="30"/>
     </key>
+    <key name="icon-style" type="s">
+      <default>'freeicons'</default>
+      <summary>Panel icon style</summary>
+      <description>Style of the panel icon (freeicons, material, or emoji)</description>
+    </key>
+    <key name="icon-size" type="i">
+      <default>22</default>
+      <summary>Panel icon size</summary>
+      <description>Size of the panel icon in pixels</description>
+      <range min="10" max="64"/>
+    </key>
   </schema>
 </schemalist>
