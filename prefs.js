@@ -303,7 +303,7 @@ export default class PingBotPreferences extends ExtensionPreferences {
 
         typeCombo.connect('changed', () => {
             const isPing = typeCombo.get_active_id() === 'ping';
-            urlEntry.set_placeholder_text(isPing ? '192.168.1.1 or 2001:db8::1' : 'https://example.com');
+            urlEntry.set_placeholder_text(isPing ? 'Domain, IPv4 or IPv6' : 'https://example.com');
             urlEntry.remove_css_class('error');
         });
 
@@ -340,7 +340,7 @@ export default class PingBotPreferences extends ExtensionPreferences {
                 }
             } else {
                 // Basic sanity check: non-empty, no whitespace
-                if (/\s/.test(input)) {
+                if (/\s/.test(input) || input.includes('://') || input.includes('/')) {
                     urlEntry.add_css_class('error');
                     return;
                 }

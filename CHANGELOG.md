@@ -4,6 +4,18 @@ All notable changes to Ping Bot will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [Unreleased]
+
+### Added
+- IP/ICMP ping monitoring — monitor any device by IP address (IPv4, IPv6) or hostname using ICMP ping, no web server required
+- GNOME Shell 50 support
+- Type selector (HTTP / Ping) in the preferences add-target row
+
+### Fixed
+- Cancelled pings during extension teardown no longer emit false RED transitions or failure notifications
+- Overlapping pings for the same target now correctly cancel the previous in-flight ping before starting a new one
+- Ping target validation now rejects URLs and paths (e.g. `https://…` or `host/path`) entered in the Ping field
+
 ## [1.0.6] - 2026-02-14
 
 ### Added
