@@ -4,7 +4,7 @@ All notable changes to Ping Bot will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [Unreleased]
+## [1.0.7] - 2026-06-30
 
 ### Added
 - IP/ICMP ping monitoring — monitor any device by IP address (IPv4, IPv6) or hostname using ICMP ping, no web server required

@@ -190,7 +190,7 @@ gnome-extensions info pingbot@gudlenieks.lv
 
 ## Recent Updates
 
-**Version 1.0.6** (February 14, 2026) - Added icon styles (Freeicons, Material, Emoji), configurable icon size, and separated CHANGELOG.md for cleaner documentation.
+**Version 1.0.7** (June 30, 2026) - Added IP/ICMP ping monitoring for devices without a web server, GNOME Shell 50 support, and a type selector in the preferences add-target row.
 
 See [CHANGELOG.md](CHANGELOG.md) for complete version history.
 
@@ -228,5 +228,5 @@ Donate via GitHub: https://github.com/sponsors/lauzis
 
 ---
 
-**Version**: 6
-**Last Updated**: February 14, 2026
+**Version**: 7
+**Last Updated**: June 30, 2026

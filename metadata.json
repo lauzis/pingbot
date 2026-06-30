@@ -2,7 +2,7 @@
   "name": "Ping Bot",
   "description": "Monitor your important websites and devices at a glance. Add URLs, IP addresses or hostnames to your list, see status indicators in the panel:\n🟢 - Everything is ok, all targets reachable.\n🟡 - Unknown or no network.\n🔴 - Some target is not reachable.\n\nNo external services, no API keys, or accounts needed.\nSimilar to uptime robot services, but from your local machine.",
   "uuid": "pingbot@gudlenieks.lv",
-  "version": 6,
+  "version": 7,
   "shell-version": [ "45", "46", "47", "48", "49", "50" ],
   "settings-schema": "org.gnome.shell.extensions.pingbot",
   "url": "https://github.com/lauzis/pingbot",
