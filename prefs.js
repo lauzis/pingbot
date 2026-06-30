@@ -182,10 +182,10 @@ export default class PingBotPreferences extends ExtensionPreferences {
         
         page.add(appearanceGroup);
         
-        // URLs group
+        // Targets group
         const urlsGroup = new Adw.PreferencesGroup({
-            title: 'URLs to Monitor',
-            description: 'Add URLs that the bot will ping',
+            title: 'Targets to Monitor',
+            description: 'Add URLs or IP addresses to monitor',
         });
         
         // Container for URL list
@@ -214,27 +214,29 @@ export default class PingBotPreferences extends ExtensionPreferences {
                 margin_start: 6,
                 margin_end: 6,
             });
-            
+
             const statuses = getUrlStatuses();
             const status = statuses[url] || 'yellow';
-            
             const iconType = iconHelper.getIconTypeFromStatus(status);
-            
+
             const statusWidget = iconHelper.createPrefsIcon(iconType, Gtk);
             row._statusWidget = statusWidget;
             row._url = url;
-            
+
+            const isPing = url.startsWith('ping://');
+            const displayText = isPing ? `${url.slice(7)} [ping]` : url;
+
             const label = new Gtk.Label({
-                label: url,
+                label: displayText,
                 xalign: 0,
                 hexpand: true,
             });
-            
+
             const deleteButton = new Gtk.Button({
                 icon_name: 'user-trash-symbolic',
                 valign: Gtk.Align.CENTER,
             });
-            
+
             deleteButton.connect('clicked', () => {
                 const urls = settings.get_strv('ping-urls');
                 const index = urls.indexOf(url);
@@ -243,11 +245,11 @@ export default class PingBotPreferences extends ExtensionPreferences {
                     settings.set_strv('ping-urls', urls);
                 }
             });
-            
+
             row.append(statusWidget);
             row.append(label);
             row.append(deleteButton);
-            
+
             return row;
         };
         
@@ -280,7 +282,7 @@ export default class PingBotPreferences extends ExtensionPreferences {
             });
         };
         
-        // Add URL row with entry and button
+        // Add target row with type selector, entry and button
         const addUrlBox = new Gtk.Box({
             orientation: Gtk.Orientation.HORIZONTAL,
             spacing: 6,
@@ -288,57 +290,77 @@ export default class PingBotPreferences extends ExtensionPreferences {
             margin_end: 6,
             margin_top: 6,
         });
-        
+
+        const typeCombo = new Gtk.ComboBoxText({ valign: Gtk.Align.CENTER });
+        typeCombo.append('http', 'HTTP');
+        typeCombo.append('ping', 'Ping');
+        typeCombo.set_active(0);
+
         const urlEntry = new Gtk.Entry({
             placeholder_text: 'https://example.com',
             hexpand: true,
         });
-        
-        // Clear error styling when user types
+
+        typeCombo.connect('changed', () => {
+            const isPing = typeCombo.get_active_id() === 'ping';
+            urlEntry.set_placeholder_text(isPing ? 'Domain, IPv4 or IPv6' : 'https://example.com');
+            urlEntry.remove_css_class('error');
+        });
+
         urlEntry.connect('changed', () => {
             urlEntry.remove_css_class('error');
         });
-        
+
         const addButton = new Gtk.Button({
-            label: 'Add URL',
+            label: 'Add',
             valign: Gtk.Align.CENTER,
         });
-        
+
         addButton.connect('clicked', () => {
-            const url = urlEntry.get_text().trim();
-            if (url) {
-                // Validate URL format
+            const input = urlEntry.get_text().trim();
+            if (!input) return;
+
+            const monitorType = typeCombo.get_active_id();
+            let target;
+
+            if (monitorType === 'http') {
                 try {
-                    const urlObj = GLib.Uri.parse(url, GLib.UriFlags.NONE);
+                    const urlObj = GLib.Uri.parse(input, GLib.UriFlags.NONE);
                     const scheme = urlObj.get_scheme();
-                    
-                    // Only allow http and https
                     if (scheme !== 'http' && scheme !== 'https') {
                         urlEntry.add_css_class('error');
                         return;
                     }
-                    
-                    // URL is valid, remove error styling
                     urlEntry.remove_css_class('error');
-                    
-                    const urls = settings.get_strv('ping-urls');
-                    if (!urls.includes(url)) {
-                        urls.push(url);
-                        settings.set_strv('ping-urls', urls);
-                        urlEntry.set_text('');
-                    }
+                    target = input;
                 } catch (e) {
-                    // Invalid URL format
                     urlEntry.add_css_class('error');
                     logger.error('Invalid URL', e);
+                    return;
                 }
+            } else {
+                // Basic sanity check: non-empty, no whitespace
+                if (/\s/.test(input) || input.includes('://') || input.includes('/')) {
+                    urlEntry.add_css_class('error');
+                    return;
+                }
+                urlEntry.remove_css_class('error');
+                target = `ping://${input}`;
+            }
+
+            const urls = settings.get_strv('ping-urls');
+            if (!urls.includes(target)) {
+                urls.push(target);
+                settings.set_strv('ping-urls', urls);
+                urlEntry.set_text('');
             }
         });
-        
+
         urlEntry.connect('activate', () => {
             addButton.emit('clicked');
         });
-        
+
+        addUrlBox.append(typeCombo);
         addUrlBox.append(urlEntry);
         addUrlBox.append(addButton);
         
