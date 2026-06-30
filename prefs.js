@@ -4,6 +4,7 @@ import GLib from 'gi://GLib';
 import {ExtensionPreferences} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 import {IconHelper, IconType} from './lib/iconHelper.js';
 import {Logger, LOG_DOMAIN} from './lib/logger.js';
+import {PING_PREFIX, displayTarget} from './lib/targetUtils.js';
 
 export default class PingBotPreferences extends ExtensionPreferences {
     fillPreferencesWindow(window) {
@@ -223,11 +224,8 @@ export default class PingBotPreferences extends ExtensionPreferences {
             row._statusWidget = statusWidget;
             row._url = url;
 
-            const isPing = url.startsWith('ping://');
-            const displayText = isPing ? `${url.slice(7)} [ping]` : url;
-
             const label = new Gtk.Label({
-                label: displayText,
+                label: displayTarget(url),
                 xalign: 0,
                 hexpand: true,
             });
@@ -345,7 +343,7 @@ export default class PingBotPreferences extends ExtensionPreferences {
                     return;
                 }
                 urlEntry.remove_css_class('error');
-                target = `ping://${input}`;
+                target = `${PING_PREFIX}${input}`;
             }
 
             const urls = settings.get_strv('ping-urls');
