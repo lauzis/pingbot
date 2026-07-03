@@ -2,6 +2,7 @@ import {Extension} from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import {StatusManager} from './lib/statusManager.js';
 import {UrlPinger} from './lib/urlPinger.js';
+import {IpPinger} from './lib/ipPinger.js';
 import {NotificationManager} from './lib/notificationManager.js';
 import {PanelIndicator} from './lib/panelIndicator.js';
 import {PingScheduler} from './lib/pingScheduler.js';
@@ -18,10 +19,13 @@ export default class PingBotExtension extends Extension {
         // changes the stats of the icons based on URL statuses
         this._statusManager = new StatusManager(this._settings);
 
-        // pings urls and triggers status updates
+        // pings http/https urls and triggers status updates
         this._urlPinger = new UrlPinger(this._settings, this._statusManager, this._logger);
 
-        // if some url goes red, notify the user
+        // pings IP/hostname targets via ICMP
+        this._ipPinger = new IpPinger(this._settings, this._statusManager, this._logger);
+
+        // if some target goes red, notify the user
         this._notificationManager = new NotificationManager(this._logger);
 
         // panels indicator in the top bar
@@ -36,11 +40,12 @@ export default class PingBotExtension extends Extension {
             this.dir
         );
 
-        // scheduler that periodically pings the URLs and status updates
+        // scheduler that periodically pings targets and triggers status updates
         this._pingScheduler = new PingScheduler(
             this._settings,
             this._statusManager,
             this._urlPinger,
+            this._ipPinger,
             this._notificationManager,
             () => this._updateMainStatus(),
             this._logger
@@ -65,6 +70,11 @@ export default class PingBotExtension extends Extension {
         if (this._urlPinger) {
             this._urlPinger.destroy();
             this._urlPinger = null;
+        }
+
+        if (this._ipPinger) {
+            this._ipPinger.destroy();
+            this._ipPinger = null;
         }
 
         if (this._panelIndicator) {
