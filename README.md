@@ -190,7 +190,7 @@ gnome-extensions info pingbot@gudlenieks.lv
 
 ## Recent Updates
 
-**Version 1.0.7** (June 30, 2026) - Added IP/ICMP ping monitoring for devices without a web server, GNOME Shell 50 support, and a type selector in the preferences add-target row.
+**Version 1.0.8** (July 3, 2026) - Fixed settings signal handlers not being disconnected on disable, per GNOME Shell extension review guidelines.
 
 See [CHANGELOG.md](CHANGELOG.md) for complete version history.
 
