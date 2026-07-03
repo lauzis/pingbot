@@ -29,6 +29,11 @@ This project follows industry-standard software engineering principles:
 - Keep information scannable and easy to navigate
 - Prioritize clarity and brevity over exhaustive detail
 
+### No AI Attribution in Code
+- **Do NOT add "Generated with Claude Code" / "Co-Authored-By: Claude" style adverts in code comments**
+- README.md already discloses AI-assisted development (Copilot + Claude Code) — no need to repeat it per-file or per-function
+- Commit messages should also skip AI attribution footers for the same reason
+
 ### Examples in This Codebase:
 - **DRY**: IconHelper eliminated 8+ duplicate if/else blocks for icon style checks
 - **KISS**: Each lib/ module is focused on one responsibility

@@ -180,6 +180,17 @@ Enable the extension and check for errors:
 gnome-extensions info pingbot@gudlenieks.lv
 ```
 
+### Testing for Common Review Issues
+
+Before submitting a new version to [extensions.gnome.org](https://extensions.gnome.org), run [Shexli](https://gitlab.gnome.org/GNOME/shexli) locally to catch common packaging and review issues early:
+
+```bash
+virtualenv venv
+. venv/bin/activate
+pip install -U shexli
+shexli pingbot@gudlenieks.lv.zip
+```
+
 ## Known Limitations
 
 - URLs must be accessible via HTTP/HTTPS GET requests
