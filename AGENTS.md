@@ -193,7 +193,7 @@ The extension follows a modular architecture with separate files for different r
 #### metadata.json
 - **Extension Name**: Ping Bot
 - **UUID**: `pingbot@gudlenieks.lv`
-- **Target GNOME Shell Version**: 45, 46, 47, 48, 49
+- **Target GNOME Shell Version**: 45, 46, 47, 48, 49, 50
 - **Description**: Monitor website availability with visual indicators
 
 #### GSettings Schema (`schemas/org.gnome.shell.extensions.pingbot.gschema.xml`)
@@ -215,7 +215,7 @@ The extension follows a modular architecture with separate files for different r
 - **Important**: When adding new files to the project, review if they should be excluded from releases
 - **Developer-only files to exclude**: AGENTS.md, development tools, test files, build scripts
 - **User-facing files to include**: README.md, CHANGELOG.md, LICENSE, all extension files
-- Current exclusions: `.git*`, `release.sh`, `schemas/gschemas.compiled`, `git-images/`, `.zip`, `.idea/`, `AGENTS.md`
+- Current exclusions: `.git*`, `release.sh`, `schemas/gschemas.compiled`, `git-images/`, `.zip`, `.idea/`, `.claude/`, `AGENTS.md`
 
 ## Features Implementation
 
