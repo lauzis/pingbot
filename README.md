@@ -180,6 +180,18 @@ Enable the extension and check for errors:
 gnome-extensions info pingbot@gudlenieks.lv
 ```
 
+### Testing in a Nested Session
+
+On Wayland the extension cannot be reloaded in the running session — GNOME caches ES modules, so disabling and re-enabling re-runs the *old* code. To exercise changed code, start a nested shell:
+
+```bash
+G_MESSAGES_DEBUG=pingbot dbus-run-session -- gnome-shell --devkit --wayland
+```
+
+The nested shell reads the same dconf settings, so the extension enables automatically and its debug output appears on stdout. Note that it runs on its own session bus: to trigger settings handlers inside it, `gsettings` must be run with `DBUS_SESSION_BUS_ADDRESS` pointing at that bus, otherwise the change notification never reaches it.
+
+On GNOME 49+ the flag is `--devkit`; older versions use `--nested`.
+
 ### Testing for Common Review Issues
 
 Before submitting a new version to [extensions.gnome.org](https://extensions.gnome.org), run [Shexli](https://gitlab.gnome.org/GNOME/shexli) locally to catch common packaging and review issues early:
@@ -191,6 +203,8 @@ pip install -U shexli
 shexli pingbot@gudlenieks.lv.zip
 ```
 
+**Shexli is not sufficient on its own.** It reported `clean` for the 1.0.8 package that was subsequently rejected by review — it flags neither non-user files in the zip nor malformed `donations` values. Treat a clean run as a floor, not a pass.
+
 ## Known Limitations
 
 - URLs must be accessible via HTTP/HTTPS GET requests
@@ -200,6 +214,8 @@ shexli pingbot@gudlenieks.lv.zip
 - Notifications are throttled to once per hour to avoid spam
 
 ## Recent Updates
+
+**Version 1.0.9** (July 28, 2026) - Addressed GNOME Shell extension review feedback: settings signals now use `connectObject()`/`disconnectObject()`, `donations` metadata values corrected to bare usernames, and development tooling excluded from the release package.
 
 **Version 1.0.8** (July 3, 2026) - Fixed settings signal handlers not being disconnected on disable, per GNOME Shell extension review guidelines.
 
