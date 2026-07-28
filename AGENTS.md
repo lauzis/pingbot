@@ -215,7 +215,7 @@ The extension follows a modular architecture with separate files for different r
 - **Important**: When adding new files to the project, review if they should be excluded from releases
 - **Developer-only files to exclude**: AGENTS.md, development tools, test files, build scripts
 - **User-facing files to include**: README.md, CHANGELOG.md, LICENSE, all extension files
-- Current exclusions: `.git*`, `release.sh`, `schemas/gschemas.compiled`, `git-images/`, `.zip`, `.idea/`, `AGENTS.md`
+- Current exclusions: `.git*`, `release.sh`, `schemas/gschemas.compiled`, `git-images/`, `.zip`, `.idea/`, `.claude/`, `AGENTS.md`
 
 ## Features Implementation
 

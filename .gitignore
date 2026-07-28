@@ -13,4 +13,7 @@ schemas/gschemas.compiled
 .vscode/
 .idea/
 
+# Agent tooling (must never ship in the release zip)
+.claude/
+
 pingbot@gudlenieks.lv.zip

@@ -27,6 +27,7 @@ zip -r "$OUTPUT_FILE" . \
     -x "git-images/*" \
     -x "*.zip" \
     -x ".idea/*" \
+    -x ".claude/*" \
     -x "AGENTS.md"
 
 echo "✅ Release created: $OUTPUT_FILE"

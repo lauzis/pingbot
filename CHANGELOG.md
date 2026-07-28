@@ -4,6 +4,15 @@ All notable changes to Ping Bot will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.0.9] - 2026-07-28
+
+**Note**: Version 1.0.8 was rejected by GNOME Shell Extensions review. Changes below address the reviewer's feedback.
+
+### Fixed
+- Settings signals now use `connectObject()`/`disconnectObject()`, so all handlers are tracked against their owner and released in a single call
+- Corrected `donations` values in `metadata.json` to bare usernames, as required by the metadata specification (they previously held full URLs)
+- Development tooling directory `.claude/` is no longer packaged into the release zip
+
 ## [1.0.8] - 2026-07-03
 
 ### Fixed
