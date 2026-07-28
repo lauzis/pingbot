@@ -193,7 +193,7 @@ The extension follows a modular architecture with separate files for different r
 #### metadata.json
 - **Extension Name**: Ping Bot
 - **UUID**: `pingbot@gudlenieks.lv`
-- **Target GNOME Shell Version**: 45, 46, 47, 48, 49
+- **Target GNOME Shell Version**: 45, 46, 47, 48, 49, 50
 - **Description**: Monitor website availability with visual indicators
 
 #### GSettings Schema (`schemas/org.gnome.shell.extensions.pingbot.gschema.xml`)
