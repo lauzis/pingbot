@@ -217,6 +217,8 @@ Run it against the **zip**, not the project folder. Shexli accepts a folder, but
 
 ## Recent Updates
 
+**Version 1.0.10** (July 29, 2026) - Added a version footer to the preferences window and a `version-name` entry in the extension metadata.
+
 **Version 1.0.9** (July 28, 2026) - Addressed GNOME Shell extension review feedback: settings signals now use `connectObject()`/`disconnectObject()`, `donations` metadata values corrected to bare usernames, and development tooling excluded from the release package.
 
 **Version 1.0.8** (July 3, 2026) - Fixed settings signal handlers not being disconnected on disable, per GNOME Shell extension review guidelines.
@@ -257,5 +259,5 @@ Donate via GitHub: https://github.com/sponsors/lauzis
 
 ---
 
-**Version**: 7
-**Last Updated**: June 30, 2026
+**Version**: 1.0.10
+**Last Updated**: July 29, 2026

@@ -388,6 +388,25 @@ export default class PingBotPreferences extends ExtensionPreferences {
         refreshUrlList();
         
         page.add(urlsGroup);
+
+        // Version footer. metadata.version is an integer reassigned by
+        // extensions.gnome.org on every upload, so it says nothing useful to a
+        // user; version-name is the string we control. Show nothing if it is absent.
+        const versionName = this.metadata['version-name'];
+        if (versionName) {
+            const versionGroup = new Adw.PreferencesGroup();
+            const versionLabel = new Gtk.Label({
+                label: `${this.metadata.name} ${versionName}`,
+                halign: Gtk.Align.CENTER,
+                margin_top: 6,
+                margin_bottom: 6,
+            });
+            versionLabel.add_css_class('dim-label');
+            versionLabel.add_css_class('caption');
+            versionGroup.add(versionLabel);
+            page.add(versionGroup);
+        }
+
         window.add(page);
 
         window.connect('close-request', () => {

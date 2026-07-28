@@ -4,6 +4,12 @@ All notable changes to Ping Bot will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.0.10] - 2026-07-29
+
+### Added
+- Extension name and version shown in a footer at the bottom of the preferences window
+- `version-name` in `metadata.json`, so the release is displayed as `1.0.10` rather than the bare upload counter
+
 ## [1.0.9] - 2026-07-28
 
 **Note**: Version 1.0.8 was rejected by GNOME Shell Extensions review. Changes below address the reviewer's feedback.

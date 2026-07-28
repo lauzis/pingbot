@@ -196,6 +196,39 @@ The extension follows a modular architecture with separate files for different r
 - **Target GNOME Shell Version**: 45, 46, 47, 48, 49, 50
 - **Description**: Monitor website availability with visual indicators
 
+#### Versioning: `version` and `version-name`
+
+Two fields, one number. **They must always stay in sync**: for integer `N`, the
+release name is `1.0.N`. Currently `version: 10` / `version-name: "1.0.10"`.
+
+- **`version`** (integer) is what extensions.gnome.org counts by, incremented by
+  one per release.
+- **`version-name`** (string) is the human-readable release, e.g. `1.0.10`.
+
+This mapping has held for the whole project: version 2 was 1.0.2, and every
+release since has matched. Rejected uploads do **not** break it — 1.0.5 and 1.0.8
+were both rejected by review, and the following releases still took integers 6
+and 9 in ordinary sequence. A rejected release keeps its number; the resubmission
+after it is a normal increment.
+
+**Releasing:** bump `version` by one, then set `version-name` to
+`1.0.<that integer>`. If the two ever disagree, one of them was edited without
+the other — reconcile against the last git tag rather than guessing.
+
+Note that `version-name` was only introduced in 1.0.10; releases before it have
+no such field, and their names live only in CHANGELOG.md and the git tags.
+
+Every place quoting a release must move together:
+
+- `metadata.json` — both fields
+- `CHANGELOG.md` — new heading
+- `README.md` — "Recent Updates" entry and the `**Version**:` footer
+- git tag `v1.0.<N>`
+
+**Display rule:** user-facing text quotes `version-name` only, never the integer.
+`prefs.js` deliberately renders no footer at all if `version-name` is missing,
+rather than falling back to the integer and showing a bare "10".
+
 #### GSettings Schema (`schemas/org.gnome.shell.extensions.pingbot.gschema.xml`)
 - **ping-interval** (int): Time between pings in minutes (1-1440)
 - **ping-urls** (array of strings): List of URLs to monitor
