@@ -203,6 +203,8 @@ pip install -U shexli
 shexli pingbot@gudlenieks.lv.zip
 ```
 
+Run it against the **zip**, not the project folder. Shexli accepts a folder, but scanning this one reports three findings that are all false positives — `.git/hooks/*.sample` read as bundled binaries, plus `release.sh`, `.gitignore` and `schemas/gschemas.compiled` as build artifacts. `release.sh` already excludes every one of them, so the zip is the only meaningful target.
+
 **Shexli is not sufficient on its own.** It reported `clean` for the 1.0.8 package that was subsequently rejected by review — it flags neither non-user files in the zip nor malformed `donations` values. Treat a clean run as a floor, not a pass.
 
 ## Known Limitations
