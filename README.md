@@ -217,6 +217,8 @@ Run it against the **zip**, not the project folder. Shexli accepts a folder, but
 
 ## Recent Updates
 
+**Version 1.0.11** (July 29, 2026) - Removed the unsupported `icon` entry from the extension metadata, per review feedback.
+
 **Version 1.0.10** (July 29, 2026) - Added a version footer to the preferences window and a `version-name` entry in the extension metadata.
 
 **Version 1.0.9** (July 28, 2026) - Addressed GNOME Shell extension review feedback: settings signals now use `connectObject()`/`disconnectObject()`, `donations` metadata values corrected to bare usernames, and development tooling excluded from the release package.
@@ -259,5 +261,5 @@ Donate via GitHub: https://github.com/sponsors/lauzis
 
 ---
 
-**Version**: 1.0.10
+**Version**: 1.0.11
 **Last Updated**: July 29, 2026

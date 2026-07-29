@@ -199,7 +199,7 @@ The extension follows a modular architecture with separate files for different r
 #### Versioning: `version` and `version-name`
 
 Two fields, one number. **They must always stay in sync**: for integer `N`, the
-release name is `1.0.N`. Currently `version: 10` / `version-name: "1.0.10"`.
+release name is `1.0.N`. Currently `version: 11` / `version-name: "1.0.11"`.
 
 - **`version`** (integer) is what extensions.gnome.org counts by, incremented by
   one per release.
