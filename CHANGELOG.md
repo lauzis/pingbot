@@ -4,7 +4,10 @@ All notable changes to Ping Bot will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [1.0.11] - 2026-07-29
+## [1.0.11] - 2026-10-15
+
+### Added
+- GNOME Shell 51 support
 
 ### Removed
 - `icon` from `metadata.json`, per extension review feedback
