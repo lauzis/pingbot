@@ -217,7 +217,7 @@ Run it against the **zip**, not the project folder. Shexli accepts a folder, but
 
 ## Recent Updates
 
-**Version 1.0.11** (July 29, 2026) - Removed the unsupported `icon` entry from the extension metadata, per review feedback.
+**Version 1.0.11** (October 15, 2026) - Added GNOME Shell 51 support and removed the unsupported `icon` entry from the extension metadata, per review feedback.
 
 **Version 1.0.10** (July 29, 2026) - Added a version footer to the preferences window and a `version-name` entry in the extension metadata.
 
@@ -229,7 +229,7 @@ See [CHANGELOG.md](CHANGELOG.md) for complete version history.
 
 ## Compatibility
 
-- **GNOME Shell**: 45, 46, 47, 48, 49, 50
+- **GNOME Shell**: 45, 46, 47, 48, 49, 50, 51
 - **Tested on**: Ubuntu 24.04, Ubuntu 24.10, Ubuntu 25.04, Ubuntu 25.10, Ubuntu 26.04, Fedora 40
 
 ## License
@@ -262,4 +262,4 @@ Donate via GitHub: https://github.com/sponsors/lauzis
 ---
 
 **Version**: 1.0.11
-**Last Updated**: July 29, 2026
+**Last Updated**: October 15, 2026
